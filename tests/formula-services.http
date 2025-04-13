@@ -1,0 +1,26 @@
+###
+GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+    "title": "Test Formula",
+    "description": "Test Formula calculation",
+    "formula": "MODEL1.SURCHARGE1 + MODEL1.SURCHARGE2",
+    "modelAliases": "[\"MODEL1\"]"
+}
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/executeSQL
+Content-Type: application/json
+
+{
+    "ID": "ABCD1234",
+    "params": "{\"MODEL1\".\"SURCHARGE1\" : \"10\",
+                \"FILTER\" : [
+                                {
+                                    \"COUNTRY\": \"NL\"
+                                }
+                ]}"
+}
