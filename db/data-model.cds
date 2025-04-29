@@ -4,11 +4,18 @@ entity Formulae : cuid, managed {
     title : String(255);
     description : String(255);
     formula : LargeString;
-    modelAliases : LargeString;
+    Models : Composition of many FormulaModels on Models.parent = $self;
+}
+
+entity FormulaModels  {
+    key parent : Association to Formulae;
+    key modelID : UUID; 
+    modelAlias : Association to TargetModels;
 }
 
 entity TargetModels: cuid, managed {
     targetModel : LargeString;
+    schameName : String(255);
     modelAlias : String(255);
 }
 
