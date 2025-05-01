@@ -1,0 +1,14 @@
+{
+    "master-db-hdi": {
+        "object_owner": {
+            "container_roles": [
+                "external_access_admin#"
+            ]
+        },
+        "application_user": {
+            "container_roles": [
+                "external_access"
+            ]
+        }
+    }
+}

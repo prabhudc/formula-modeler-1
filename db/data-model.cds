@@ -15,7 +15,7 @@ entity FormulaModels  {
 
 entity TargetModels: cuid, managed {
     targetModel : LargeString;
-    schameName : String(255);
+    schemaName : String(255);
     modelAlias : String(255);
 }
 
