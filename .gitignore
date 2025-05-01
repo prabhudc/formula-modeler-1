@@ -34,3 +34,5 @@ mta_archives/
 @cds-models
 .$*.drawio.*
 .vscode/
+# auto generated wildcard
+db/.env

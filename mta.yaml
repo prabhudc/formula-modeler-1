@@ -25,6 +25,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: formula-modeler-1-db
+      - name: formula-modeler-1-auth
 
   - name: formula-modeler-1-db-deployer
     type: hdb
@@ -33,6 +34,16 @@ modules:
       buildpack: nodejs_buildpack
     requires:
       - name: formula-modeler-1-db
+      - name: fm-input-db
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: fm-input-db-hdi
+          service: ~{fm-input-db-hdi}
+      - name: base-db-sys
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: ups-base-db-sys-hdi
+          service: ~{ups-base-db-sys-hdi}
 
 resources:
   - name: formula-modeler-1-db
@@ -40,3 +51,24 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
+  - name: fm-input-db
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: ups-fm-input
+    properties:
+      fm-input-db-hdi: ${service-name}
+  - name: base-db-sys
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: ups-base-db-sys
+    properties:
+      ups-base-db-sys-hdi: ${service-name}
+  - name: formula-modeler-1-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: formula-modeler-1-${org}-${space}
+        tenant-mode: dedicated

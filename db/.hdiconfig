@@ -1,0 +1,13 @@
+{
+"plugin_version": "4.0.0.0",
+"file_suffixes" : {
+   "hdbsynonym" : { 
+      "plugin_name" : "com.sap.hana.di.synonym"},
+   "hdbview" : { 
+      "plugin_name" : "com.sap.hana.di.view"}, 
+   "hdbcalculationview" : { 
+      "plugin_name" : "com.sap.hana.di.calculationview"},
+   "hdbprocedure" : { 
+      "plugin_name" : "com.sap.hana.di.procedure"}
+}
+}

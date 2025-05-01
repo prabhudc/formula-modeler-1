@@ -1,0 +1,14 @@
+{
+  "TABLES": {
+    "target": {
+      "object": "TABLES",
+      "schema": "SYS"
+    }
+  },
+  "VIEWS": {
+    "target": {
+      "object": "VIEWS",
+      "schema": "SYS"
+    }
+  }
+}

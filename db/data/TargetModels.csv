@@ -1,2 +1,2 @@
-ID,targetModel,schameName,modelAlias,createdAt,createdBy,modifiedAt,modifiedBy
+ID,targetModel,schemaName,modelAlias,createdAt,createdBy,modifiedAt,modifiedBy
 c493219b-c153-4e21-8425-482a372bc63c,CVD_TEST_ADDITION,FM_TEST_HDI,FM_TEST_ADDITION,2025-04-21T00:00:00Z,admin,2025-04-21T00:00:00Z,admin
