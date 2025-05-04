@@ -32,3 +32,19 @@ entity ModelRelationshipAttributes : cuid, managed {
     rightAttribute : String(255);
 }
 
+// Graph setup
+// Vertices of the Graph
+entity Nodes : cuid {
+    node_is_root : Boolean;
+    node_is_leaf : Boolean;
+    node_operator : String(5);
+    node_operand : String(255);
+    node_formula : String(255);
+}
+
+// Edges of the Graph
+entity Edges : cuid {
+    start : Association to Nodes not null;
+    end : Association to Nodes not null;
+    edge_location : String(1) @assert.range: ['l', 'n', 'r'];
+}

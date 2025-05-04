@@ -1,0 +1,42 @@
+PROCEDURE "pr_get_formula" ( in p_formula_id nvarchar(36), out p_formula nvarchar(1024 ))
+   LANGUAGE GRAPH
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic
+   *************************************/
+   graph g = Graph("G_WS_FORMULAE");
+   nvarchar(1024) node_list;
+   node_list = '';
+   nvarchar(4096) formula_part;
+
+   vertex root_node = Vertex(:g, :p_formula_id);
+
+      traverse dfs :g from :root_node
+      on exit vertex(vertex v){
+         node_list = :node_list || ', '|| to_nvarchar(:v."ID");
+         if ( :v."NODE_IS_ROOT" == false and :v."NODE_IS_LEAF" == false ){
+         
+            sequence<Edge> o_edges =  out_edges(:v) order by ("EDGE_LOCATION" ASC);
+            foreach sub_graph_edge in :o_edges {
+               
+               if(:sub_graph_edge."EDGE_LOCATION" == 'l'){
+               -- Vertex o_node  = Vertex(:g, :formula_part."END_ID");
+                  -- o_node.
+               }
+               if(:sub_graph_edge."EDGE_LOCATION" == 'r'){
+               -- Vertex o_node  = Vertex(:g, :formula_part."END_ID");
+                  -- o_node.
+               }
+      
+            }
+   
+         }
+         
+      };
+      
+   p_formula = '';
+
+   
+END

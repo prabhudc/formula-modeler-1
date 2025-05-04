@@ -1,2 +1,2 @@
 ID,title,description,formula,createdAt,createdBy,modifiedAt,modifiedBy
-e7eb96e2-df1b-4329-b8f8-e0b93dd460e0,"Simple Addition","A simple addition formula","COST1 + COST2",2025-04-21T12:00:00Z,admin,2025-04-21T12:00:00Z,admin
+e7eb96e2-df1b-4329-b8f8-e0b93dd460e0,"Simple Addition","A simple addition formula","GROSS_PRICE + DISCOUNT",2025-04-21T12:00:00Z,admin,2025-04-21T12:00:00Z,admin
