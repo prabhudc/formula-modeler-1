@@ -1,0 +1,7 @@
+ID,node_is_root,node_is_leaf,node_operator,node_operand,node_formula
+f47ac10b-58cc-4372-a567-0e02b2c3d479,true,false,"","","TOTAL_COST"
+9a7b330d-1c4b-4f3b-8c5e-2d7b1e4a2f3c,false,false,"/","",""
+3fa85f64-5717-4562-b3fc-2c963f66afa6,false,,"+","",""
+730e4e1c-9b2d-4d3a-8c1f-5e4b2a3d7f8e,false,true,"","COST1",""
+1b4e28ba-2fa1-11d2-883f-0016d3cca427,false,true,"","COST2",""
+550e8400-e29b-41d4-a716-446655440000,false,true,"","REVENUE",""
