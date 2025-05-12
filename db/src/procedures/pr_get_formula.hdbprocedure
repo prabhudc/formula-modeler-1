@@ -5,41 +5,51 @@ PROCEDURE "pr_get_formula" ( in p_formula_id nvarchar(36), out p_formula nvarcha
    AS
 BEGIN
    /*************************************
-       Write your procedure logic
+   * Build and retrieve the formula
+   * Input: p_formula_id from the formula entity
+   * Output: p_formula as a string
    *************************************/
-   graph g = Graph("G_WS_FORMULAE");
+   graph g = Graph("G_WS_FORMULAE")
+             with temporary attributes(vertex nvarchar temp_formula_part);
    nvarchar(4096) formula_part = '';
+   nvarchar(255)  lnode_part = '';
+   nvarchar(255)  rnode_part = '';
 
+   -- Get the root node for graph traversal
    vertex root_node = Vertex(:g, :p_formula_id);
 
-      traverse dfs :g from :root_node
-      on exit vertex(vertex v){
-         node_list = :node_list || ', '|| to_nvarchar(:v."ID");
-         if ( :v."NODE_IS_ROOT" == false and :v."NODE_IS_LEAF" == false ){
-
-            Multiset<Edge> o_ledge = e in out_edges(:v) where  :e."EDGE_LOCATION" == 'l';
-            foreach e in  o_ledge {
-               Vertex o_lnode  = TARGET(:e);
-               formula_part = :formula_part || :o_lnode."NODE_FORMULA";
-            }
-
-            Multiset<Edge> o_redge = e in out_edges(:v) where  :e."EDGE_LOCATION" == 'r';
-            foreach e in  o_redge {
-               Vertex o_rnode  = TARGET(:e);
-               formula_part = :formula_part || :o_lnode."NODE_FORMULA";
-            }
-
-            formula_part = '( '|| :o_lnode."NODE_OPERAND"||:v."NODE_OPERATOR" || :o_rnode."NODE_OPERAND" || ' )';
-            
-
-         }
-         
-      };
-
-
-      
-   p_formula = :formula_part;
+   -- Copy the node_operand to the temporary attributes
+   -- This allows us to pass on part-formula up the tree
+   foreach   v in Vertices(:g){
+   	v.temp_formula_part = :v.node_operand;
+   }
    
+   -- Traverse the graph with DFS algorithm
+   -- ( Start with the inner most formula and build outwards)
+   traverse dfs :g from :root_node
+   on exit vertex(vertex v){
 
+      if ( :v."NODE_IS_ROOT" == false and :v."NODE_IS_LEAF" == false ){
+         -- Look at the left-branch
+         Multiset<Edge> o_ledge = e in out_edges(:v) where  :e.edge_location == 'l';
+         foreach e in  :o_ledge {
+            Vertex o_lnode  = TARGET(:e);
+            lnode_part = :o_lnode.temp_formula_part;
+         } 
+         -- Look at the right-branch
+         Multiset<Edge> o_redge = e in out_edges(:v) where  :e.edge_location == 'r';
+         foreach e in  :o_redge {
+               Vertex o_rnode  = TARGET(:e);
+               rnode_part = :o_rnode.temp_formula_part;
+         }
+         -- Concatenate the left and right branches and save into temporary attribute
+         v.temp_formula_part =  '('||:lnode_part||:v.node_operator||:rnode_part||')';
+
+         formula_part = :v.temp_formula_part;
+      }
+      
+   };
+
+   p_formula = :formula_part;
    
 END

@@ -14,3 +14,8 @@ service FormulaModelerServices {
     // action executeSQL(formulaID: UUID ) returns String;
 
 }   
+
+
+service SandboxService {
+    action createFormula(title: String,description: String, formula: String, modelAliases: array of String);
+}

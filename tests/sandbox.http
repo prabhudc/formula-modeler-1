@@ -1,0 +1,10 @@
+###
+POST http://localhost:4004/odata/v4/sandbox/createFormula
+Content-Type: application/json
+
+{
+    "title": "Test Formula",
+    "description": "Test Formula calculation",
+    "formula": "((COST1+COST2+3.2)/REVENUE)",
+    "modelAliases": ["MODEL1"]
+}
