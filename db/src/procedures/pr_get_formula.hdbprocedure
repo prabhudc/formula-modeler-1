@@ -31,13 +31,13 @@ BEGIN
 
       if ( :v."NODE_IS_ROOT" == false and :v."NODE_IS_LEAF" == false ){
          -- Look at the left-branch
-         Multiset<Edge> o_ledge = e in out_edges(:v) ;
+         Multiset<Edge> o_ledge =  out_edges(:v) ;
          foreach e in  :o_ledge {
             Vertex o_lnode  = TARGET(:e);
             lnode_part = :o_lnode.temp_formula_part;
          } 
          -- Look at the right-branch
-         Multiset<Edge> o_redge = e in out_edges(:v) ;
+         Multiset<Edge> o_redge =  out_edges(:v) ;
          foreach e in  :o_redge {
                Vertex o_rnode  = TARGET(:e);
                rnode_part = :o_rnode.temp_formula_part;
