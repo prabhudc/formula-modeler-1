@@ -46,5 +46,5 @@ entity Nodes : cuid {
 entity Edges : cuid {
     start : Association to Nodes not null;
     end : Association to Nodes not null;
-    edge_location : String(1) @assert.range: ['l', 'n', 'r'];
+    // edge_location : String(1) @assert.range: ['l', 'n', 'r'];
 }
