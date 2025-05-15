@@ -4,6 +4,8 @@ entity Formulae : cuid, managed {
     title : String(255);
     description : String(255);
     formula : LargeString;
+    dataRetrievalProxyObject : String(255);
+    Graph_root : Composition of one Nodes on Graph_root.formula = $self;
     Models : Composition of many FormulaModels on Models.parent = $self;
 }
 
@@ -34,12 +36,13 @@ entity ModelRelationshipAttributes : cuid, managed {
 
 // Graph setup
 // Vertices of the Graph
-entity Nodes : cuid {
+entity Nodes  : cuid {
     node_is_root : Boolean;
     node_is_leaf : Boolean;
     node_operator : String(5);
     node_operand : String(255);
     node_formula : String(255);
+    formula : Association to Formulae;
 }
 
 // Edges of the Graph

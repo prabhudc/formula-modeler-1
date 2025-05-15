@@ -1,2 +1,3 @@
 ID,targetModel,schemaName,modelAlias,createdAt,createdBy,modifiedAt,modifiedBy
-c493219b-c153-4e21-8425-482a372bc63c,cvd_simple_sales,E56CE260A1AF4F678E87F9C51F3FE19E,simple_sales,2025-04-21T00:00:00Z,admin,2025-04-21T00:00:00Z,admin
+c493219b-c153-4e21-8425-482a372bc63c,cvd_simple_sales,31C095A9FC534A70AA32B194DEEB6D57,simple_sales,2025-04-21T00:00:00Z,admin,2025-04-21T00:00:00Z,admin
+9f1d4c3e-7a2b-4d6e-8c1f-3b2a7d9e6f5c,cvd_complex_margin,31C095A9FC534A70AA32B194DEEB6D57,complex_margin,2025-04-22T00:00:00Z,admin,2025-04-22T00:00:00Z,admin
