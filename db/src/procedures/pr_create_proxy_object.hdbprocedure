@@ -1,0 +1,9 @@
+procedure "pr_create_proxy_object"(p_sql_statement nvarchar(4096)
+        )
+    LANGUAGE SQLSCRIPT
+    --DEFAULT SCHEMA <default_schema_name>
+    -- READS SQL DATA 
+    AS
+    BEGIN
+        execute immediate :p_sql_statement;
+    END;

@@ -12,15 +12,13 @@ Content-Type: application/json
     "modelAliases": "[\"MODEL1\"]"
 }
 ###
-POST http://localhost:4004/odata/v4/formula-modeler-services/executeSQL
+POST http://localhost:4004/odata/v4/formula-modeler-services/executeFormulaOnModel
 Content-Type: application/json
 
 {
-    "ID": "ABCD1234",
-    "params": "{\"MODEL1\".\"SURCHARGE1\" : \"10\",
-                \"FILTER\" : [
-                                {
-                                    \"COUNTRY\": \"NL\"
-                                }
-                ]}"
+    "formulaID": "5f9a3d2c-1b4e-7c8f-9e6a-2b3f4d1a5c7e",
+    "params" : {
+        "keys": ["ID"],
+        "filters" : []
+    }
 }

@@ -1,4 +1,4 @@
-PROCEDURE "pr_get_formula" ( in p_formula_id nvarchar(36), out p_formula nvarchar(1024 ))
+PROCEDURE "pr_get_formula" ( in p_formula_id nvarchar(36), out p_formula nvarchar(2048 ))
    LANGUAGE GRAPH
    --DEFAULT SCHEMA <default_schema_name>
    READS SQL DATA 
@@ -14,9 +14,15 @@ BEGIN
    nvarchar(4096) formula_part = '';
    nvarchar(255)  lnode_part = '';
    nvarchar(255)  rnode_part = '';
+   nvarchar(36)   root_node_id = '';	
+   
+   --Get the root node from the formula ID
+   foreach   v in Vertices(:g){
+	   if (:v.node_is_root == true and :v.formula_id == :p_formula_id){root_node_id = :v.id;}
+   }
 
    -- Get the root node for graph traversal
-   vertex root_node = Vertex(:g, :p_formula_id);
+   vertex root_node = Vertex(:g, :root_node_id);
 
    -- Copy the node_operand to the temporary attributes
    -- This allows us to pass on part-formula up the tree
