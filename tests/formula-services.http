@@ -12,13 +12,22 @@ Content-Type: application/json
     "modelAliases": "[\"MODEL1\"]"
 }
 ###
-POST http://localhost:4004/odata/v4/formula-modeler-services/executeFormulaOnModel
+POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModelbyFormulaID
 Content-Type: application/json
 
 {
     "formulaID": "5f9a3d2c-1b4e-7c8f-9e6a-2b3f4d1a5c7e",
     "params" : {
-        "keys": ["ID"],
+        "keys": ["ID","STORE_ID","CUSTOMER_ID","TRANSACTION_DATE"],
         "filters" : []
     }
+}
+
+###
+GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormulaID
+Content-Type: application/json
+
+{
+    "formulaID": "5f9a3d2c-1b4e-7c8f-9e6a-2b3f4d1a5c7e"
+    
 }

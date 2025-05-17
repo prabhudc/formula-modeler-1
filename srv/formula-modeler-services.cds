@@ -4,6 +4,7 @@ using TargetModels as _targetmodels from '../db/data-model.cds';
 
 
 service FormulaModelerServices {
+
     // Maintain Formulae
     entity Formulae      as projection on _formulae;
     // Maintain FormulaModels
@@ -11,7 +12,7 @@ service FormulaModelerServices {
     // Maintain TargetModels
     entity TargetModels  as projection on _targetmodels;
     // Main service to execute the formula
-    action executeFormulaOnModel(formulaID : UUID,
+    action buildFormulaOnModelbyFormulaID(formulaID : UUID,
                                  params : {
         keys    : array of String;
         filters : array of {
@@ -20,6 +21,9 @@ service FormulaModelerServices {
             value    : String;
         }
     }) returns array of String;
+
+    // Formula data retrieval
+    function retrieveDataForFormulaID(formulaID : UUID) returns array of {};
 
 }
 
