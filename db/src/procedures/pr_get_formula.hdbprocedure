@@ -49,7 +49,7 @@ BEGIN
                rnode_part = :o_rnode.temp_formula_part;
          }
          -- Concatenate the left and right branches and save into temporary attribute
-         v.temp_formula_part =  '('||:lnode_part||:v.node_operator||:rnode_part||')';
+         v.temp_formula_part =  '("'||:lnode_part||'"'||:v.node_operator||'"'||:rnode_part||'")';
 
          formula_part = :v.temp_formula_part;
       }
