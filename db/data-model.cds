@@ -39,6 +39,8 @@ entity ModelRelationshipAttributes : cuid, managed {
 entity Nodes  : cuid {
     node_is_root : Boolean;
     node_is_leaf : Boolean;
+    node_is_constant : Boolean;
+    node_is_variable : Boolean;
     node_operator : String(5);
     node_operand : String(255);
     node_formula : String(255);
