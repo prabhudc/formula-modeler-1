@@ -2,3 +2,4 @@ ID,title,description,formula,createdAt,createdBy,modifiedAt,modifiedBy
 e7eb96e2-df1b-4329-b8f8-e0b93dd460e0,"Medium Complexity","A medium complexity formula","((COST1+COST2)/REVENUE)",2025-04-21T12:00:00Z,admin,2025-04-21T12:00:00Z,admin
 3c2f1a6e-5b9f-4e3e-9c3f-2e3a8b5b9f4a,"Complex Margin","A complex calculation formula","(TARGET_MARGIN-((1-((COST1+COST2)/(REVENUE1+REVENUE2)))*100))",2025-04-22T12:00:00Z,admin,2025-04-22T12:00:00Z,admin
 5f9a3d2c-1b4e-7c8f-9e6a-2b3f4d1a5c7e,"Simple Addition","A formula with simple addition","GROSS_PRICE + DISCOUNT",2025-04-23T12:00:00Z,admin,2025-04-23T12:00:00Z,admin
+b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e,"Net Price Determination","Calculate net price of products","((list_price-list_price(discount_percentage/100))volume)",2025-05-19T12:00:00Z,admin,2025-05-19T12:00:00Z,admin

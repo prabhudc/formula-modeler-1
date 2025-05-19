@@ -29,5 +29,24 @@ Content-Type: application/json
 
 {
     "formulaID": "5f9a3d2c-1b4e-7c8f-9e6a-2b3f4d1a5c7e"
-    
+}
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModelbyFormulaID
+Content-Type: application/json
+
+{
+    "formulaID": "b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e",
+    "params" : {
+        "keys": ["product_id"],
+        "filters" : []
+    }
+}
+
+###
+GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormulaID?$top=100&$skip=200
+Content-Type: application/json
+
+{
+    "formulaID": "b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e"
 }

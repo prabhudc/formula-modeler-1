@@ -3,6 +3,8 @@ const utils = require("./lib/utils");
 const math = require("mathjs");
 const coreservices = require("./lib/core-services");
 const { json } = require("@sap/cds/lib/compile/parse");
+const DEFAULTS = require("./lib/constants").DEFAULTS;
+
 module.exports = cds.service.impl(async function () {
     const { FormulaModeler } = this.entities;
     const db = await cds.connect.to('db');
@@ -40,7 +42,7 @@ module.exports = cds.service.impl(async function () {
             // Create the proxy object in the DB
             await cds.run(' call "pr_create_proxy_object"( ? ) ', createDataRetrievalProxyObjectSQL);
             // Update the proxy DB object name in the formulae entity
-            await UPDATE('Formulae').set({ dataRetrievalProxyObject: dataRetrievalProxyObject }).where({ ID: formulaID });
+            await UPDATE('Formulae').set({ dataRetrievalProxyObject: dataRetrievalProxyObject  }).where({ ID: formulaID });
           
             return(200,  [responseFormula, responseTargetModel]);
 
@@ -75,16 +77,22 @@ module.exports = cds.service.impl(async function () {
 
         if (!dbObject || !dbObject.dataRetrievalProxyObject)
           throw new Error("Unable to retrieve the data retrieval object (retrieveDataForFormulaID)");
-
+        // Query dataset with pagination 
         const retrieveDataFromProxyObject = await cds.run(
-          `select * from ${dbObject.dataRetrievalProxyObject}()`
+          `select * from "${dbObject.dataRetrievalProxyObject}"(  )
+          limit ${req.req.query.$top || DEFAULTS.query_limit}
+          offset ${req.req.query.$skip || 0}
+          `,
         );
 
         if (!retrieveDataFromProxyObject) 
           throw new Error(`Could not retrieve data from the proxy object (retrieveDataForFormulaID)`);
         
-
-        return 200, retrieveDataFromProxyObject;
+        return {
+          status: 200,
+          data: retrieveDataFromProxyObject,
+          // Return the current offset
+          next : parseInt(req.req.query.$skip || 0) + retrieveDataFromProxyObject.length};
 
       } catch (error) {
         cds.log().error(`Unable to retrieve data for formula ID ${formulaID}`,error.message);
