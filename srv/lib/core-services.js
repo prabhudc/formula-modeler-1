@@ -208,7 +208,7 @@ module.exports = {
               ID: node.ID,
               node_is_root: false,
               node_is_leaf: true,
-              node_is_constant: true,
+              node_is_constant: isNaN(node.value)? false: true, 
               node_is_variable: false,
               node_operator: '',
               node_operand: node.value,
