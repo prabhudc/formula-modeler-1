@@ -1,5 +1,5 @@
 ###
-GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Models
+GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Models&$expand=Nodes&$expand=Edges
 
 ###
 POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
@@ -50,3 +50,44 @@ Content-Type: application/json
 {
     "formulaID": "b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e"
 }
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+      "title": "Actual Price",
+      "description": "Actual Price Calculation",
+      "formula": "(\"list_price\"-\"list_price\"*(\"discount_percentage\"/100))",
+      "Models": [
+        {
+          "model_ID": "9f1d4c3e-7a2b-4d6e-8c1f-3b2a7d9e6f5c"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "ACTUAL_PRICE"
+          }
+      ]
+    }
+
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+      "title": "Actual Price",
+      "description": "Actual Price Calculation",
+      "formula": "\"discount_percentage\"*100+\"list_price\"*\"volume\"",
+      "Models": [
+        {
+          "model_ID": "9f1d4c3e-7a2b-4d6e-8c1f-3b2a7d9e6f5c"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "Price test calculation"
+          }
+      ]
+    }
