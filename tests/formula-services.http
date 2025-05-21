@@ -1,5 +1,5 @@
 ###
-GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Models
+GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Models&$expand=Nodes&$expand=Edges
 
 ###
 POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
@@ -50,3 +50,70 @@ Content-Type: application/json
 {
     "formulaID": "b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e"
 }
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+      "title": "Actual Price - 20250521",
+      "description": "Actual Price Calculation - corrected",
+      "formula": "(\"list_price\"-\"list_price\"*(\"discount_percentage\"/100))",
+      "Models": [
+        {
+          "model_ID": "6a3e9f1b-2d8c-4a7d-9f3e-12c4d5e6f7a8"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "ACTUAL_PRICE_NEW"
+          }
+      ]
+    }
+
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+      "title": "Actual Price 3",
+      "description": "Actual Price Calculation 3",
+      "formula": "\"discount_percentage\"*100+\"list_price\"*\"volume\"",
+      "Models": [
+        {
+          "model_ID": "6a3e9f1b-2d8c-4a7d-9f3e-12c4d5e6f7a8"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "Price test calculation"
+          }
+      ]
+    }
+
+
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModelbyFormulaID
+Content-Type: application/json
+
+{
+    "formulaID": "95f471b7-8345-4119-91a9-c9d790397552",
+    "params" : {
+        "keys": ["product_id"],
+        "filters" : []
+    }
+}
+
+###
+GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormulaID?$top=100&$skip=200
+Content-Type: application/json
+
+{
+    "formulaID": "95f471b7-8345-4119-91a9-c9d790397552"
+}
+
+
+###
+DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('19292ad4-47ba-43bf-9e0c-94a382b859c2')

@@ -100,46 +100,35 @@ module.exports = cds.service.impl(async function () {
       }
     });
 
-    function createFormulaAST(node) {
-        // Parse the AST into a JSON object
-        const json = JSON.stringify(node, null, 2);
-    
-        node.traverse(function (node, path, parent) {
-        switch (node.type) {
-            case 'OperatorNode':
-            cds.log().info(node.type, node.op)
-            break
-            case 'ConstantNode':
-            cds.log().info(node.type, node.value)
-            break
-            case 'SymbolNode':
-            cds.log().info(node.type, node.name)
-            break
-            default:
-            cds.log().info(node.type)
+    this.before('CREATE', 'Formulae', async (req) => {
+        /**
+         * Prepares the Nodes and Edges required to form the formula graph.
+         * @param {Object} req - The request object containing the data to be validated.
+         * @throws {Error} - Throws an error if the required fields are missing or invalid.
+         * @description The function checks if the required fields (title, description, formula, target models, and nodes.node_formula)
+         * are present in the request data. If any of them are missing or invalid, it throws an error.
+         * If all required fields are present, it calls the createFormulaEntryPayload function
+         * to create the entries to the Nodes and Edges entities.
+         */
+        const { title, description, formula, Models, Nodes } = req.data;
+        if (!title) throw new Error("Title is required");
+        if (!description) description = ""; 
+        if (!formula) throw new Error("Formula is required");
+        if (!Models || Models.length === 0) throw new Error("Target Models for the formula are required");
+        if (!Nodes || Nodes.length === 0 || !Nodes[0].node_formula || Nodes[0].node_formula === '') throw new Error("Formula Name is required");
+        try {
+          const formulaID =   await coreservices.createFormulaEntryPayload(req);
+          return {
+            status: 200,
+            data: formulaID
+          }
+          
+        }catch (error) {
+          cds.log().error(`Unable to create formula entry`, error.message);
+          req.error(400, `Unable to create formula entry`, error.message);
         }
-        })
-    };
+      }
+    );
 
-    this.on('createFormula', async (req, res) => {
-        const {title, description, formula, modelAliases } = req.data;
-        const formulaPayload = {
-            title,
-            description,
-            formula,
-            modelAliases 
-        };
-        // Parse the formula into an AST
-        const ast = math.parse(formula);
-        createFormulaAST(ast);
-
-        res = await INSERT.into("Formulae").entries({
-            title: title,
-            description: description,
-            formula: formula, 
-            models: modelAliases
-        });
-        cds.log().info(res);
-        
-    });
+    
 });
