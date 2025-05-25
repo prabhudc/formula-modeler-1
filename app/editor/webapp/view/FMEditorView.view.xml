@@ -1,0 +1,70 @@
+<mvc:View controllerName="fm.editor.controller.FMEditorView"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:ce="sap.ui.codeeditor">
+    <Page id="fmeditorpage" title="{i18n>title}">
+        <Wizard id="fmEditorWizard">
+            <!-- Step 1: Select Models -->
+            <WizardStep id="selectModelsStep" title="Select Models" validated="true">
+                <VBox>
+                    <Text text="Select one or more models from the list below:"/>
+                    <Table id="targetModelsTable"
+                           items="{/TargetModels}"
+                           mode="MultiSelect"
+                           selectionChange="onTargetModelsSelectionChange">
+                        <columns>
+                            <Column>
+                                <Text text="Model Name"/>
+                            </Column>
+                            <Column>
+                                <Text text="Schema Name"/>
+                            </Column>
+                            <Column>
+                                <Text text="Model Alias"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{targetModel}"/>
+                                    <Text text="{schemaName}"/>
+                                    <Text text="{modelAlias}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                    <Button text="Select Models"
+                            type="Emphasized"
+                            press="onSelectModels"
+                            enabled="{= !!${targetModelsTable>/selectedContexts}.length }"/>
+                </VBox>
+            </WizardStep>
+            <!-- Step 2: Formula Details -->
+            <WizardStep id="formulaDetailsStep" title="Formula Details" validated="false">
+                <VBox>
+                    <Input id="formulaNameInput"
+                           placeholder="Enter Formula Name"
+                           required="true"
+                           valueLiveUpdate="true"
+                           liveChange="onFormulaNameChange"/>
+                    <Input id="formulaDescriptionInput"
+                           placeholder="Enter Formula Description"
+                           required="true"
+                           valueLiveUpdate="true"
+                           liveChange="onFormulaDescriptionChange"/>
+                    <ce:CodeEditor
+                        id="formulaCodeEditor"
+                        type="matlab"
+                        height="200px"
+                        width="100%"
+                        value=""
+                        required="true"
+                        liveChange="onFormulaCodeChange"
+                        maxLength="4096"
+                        colorTheme="monokai"
+                        placeholder="Enter formula code here"/>
+                </VBox>
+            </WizardStep>
+        </Wizard>
+    </Page>
+</mvc:View>

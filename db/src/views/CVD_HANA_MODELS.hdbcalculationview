@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CVD_HANA_MODELS" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CVD_HANA_MODELS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="VIEWS">
+    <resourceUri>VIEWS</resourceUri>
+  </DataSource>
+  <DataSource id="TARGETMODELS">
+    <resourceUri>TARGETMODELS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="views" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SCHEMA_NAME"/>
+      <viewAttribute id="VIEW_NAME"/>
+      <viewAttribute id="IS_COLUMN_VIEW"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="VIEWS"/>
+    <filter>&quot;IS_COLUMN_VIEW&quot; = 'TRUE'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="cds_target_models">
+    <viewAttributes>
+      <viewAttribute id="SCHEMANAME"/>
+      <viewAttribute id="TARGETMODEL"/>
+    
+      <viewAttribute id="MODELALIAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TARGET_MODEL_CHAR" datatype="NVARCHAR" length="255" expressionLanguage="SQL">
+        <formula>to_nvarchar(&quot;TARGETMODEL&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TARGETMODELS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="view_lookup" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="SCHEMA_NAME"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="VIEW_NAME"/>
+      <viewAttribute id="MODELALIAS"/>
+      <viewAttribute hidden="true" id="JOIN$SCHEMA_NAME$SCHEMANAME"/>
+      <viewAttribute hidden="true" id="JOIN$VIEW_NAME$CC_TARGET_MODEL_CHAR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="views">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCHEMA_NAME" source="SCHEMA_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VIEW_NAME" source="VIEW_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCHEMA_NAME$SCHEMANAME" source="SCHEMA_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VIEW_NAME$CC_TARGET_MODEL_CHAR" source="VIEW_NAME"/>
+    </input>
+    <input node="cds_target_models">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGETMODEL" source="TARGETMODEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODELALIAS" source="MODELALIAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCHEMA_NAME$SCHEMANAME" source="SCHEMANAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VIEW_NAME$CC_TARGET_MODEL_CHAR" source="CC_TARGET_MODEL_CHAR"/>
+    </input>
+    <joinAttribute name="JOIN$SCHEMA_NAME$SCHEMANAME"/>
+    <joinAttribute name="JOIN$VIEW_NAME$CC_TARGET_MODEL_CHAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="filter_models" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SCHEMA_NAME"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="VIEW_NAME"/>
+    
+      <viewAttribute id="MODELALIAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="view_lookup"/>
+    <filter>&quot;VIEW_NAME&quot; != 'CVD_HANA_MODELS'</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="filter_models">
+  <attributes>
+    <attribute id="SCHEMA_NAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCHEMA_NAME"/>
+      <keyMapping columnObjectName="filter_models" columnName="SCHEMA_NAME"/>
+    </attribute>
+    <attribute id="VIEW_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VIEW_NAME"/>
+      <keyMapping columnObjectName="filter_models" columnName="VIEW_NAME"/>
+    </attribute>
+  
+    <attribute id="MODELALIAS" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODELALIAS"/>
+      <keyMapping columnObjectName="filter_models" columnName="MODELALIAS"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="241" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="views" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="cds_target_models" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="view_lookup" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222" y="361"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="views" modelObjectNameSpace="view_lookup" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="100"/>
+    </shape>
+    <shape modelObjectName="cds_target_models" modelObjectNameSpace="view_lookup" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="168"/>
+    </shape>
+    <shape expanded="true" modelObjectName="filter_models" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222" y="236"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

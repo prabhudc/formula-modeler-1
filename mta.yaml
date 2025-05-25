@@ -1,37 +1,26 @@
 _schema-version: 3.3.0
 ID: formula-modeler-1
+description: Formula Modeler.
 version: 1.0.0
-description: "Formula Modeler."
-parameters:
-  enable-parallel-deployments: true
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
 modules:
   - name: formula-modeler-1-srv
     type: nodejs
     path: gen/srv
-    parameters:
-      instances: 1
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: formula-modeler-1-srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
     requires:
       - name: formula-modeler-1-db
       - name: formula-modeler-1-auth
-
+    provides:
+      - name: formula-modeler-1-srv-api
+        properties:
+          srv-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+      instances: 1
+    build-parameters:
+      builder: npm-ci
   - name: formula-modeler-1-db-deployer
     type: hdb
     path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
     requires:
       - name: formula-modeler-1-db
       - name: fm-input-db
@@ -44,7 +33,33 @@ modules:
         properties:
           key: ups-base-db-sys-hdi
           service: ~{ups-base-db-sys-hdi}
-
+    parameters:
+      buildpack: nodejs_buildpack
+  - name: formula-modeler-1-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: formula-modeler-1-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - fmmanager.zip
+          name: fmmanager
+          target-path: resources/
+  - name: fmmanager
+    type: html5
+    path: app/manager
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
 resources:
   - name: formula-modeler-1-db
     type: com.sap.xs.hdi-container
@@ -66,9 +81,42 @@ resources:
   - name: formula-modeler-1-auth
     type: org.cloudfoundry.managed-service
     parameters:
+      config:
+        tenant-mode: dedicated
+        xsappname: formula-modeler-1-${org}-${space}
+      path: ./xs-security.json
       service: xsuaa
       service-plan: application
-      path: ./xs-security.json
+  - name: formula-modeler-1-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: formula-modeler-1-html5-service
+      service-plan: app-host
+  - name: formula-modeler-1-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
       config:
-        xsappname: formula-modeler-1-${org}-${space}
-        tenant-mode: dedicated
+        HTML5Runtime_enabled: false
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: formula-modeler-1-destination-service
+      service-plan: lite
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production

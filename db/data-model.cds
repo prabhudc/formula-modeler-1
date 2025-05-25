@@ -36,6 +36,7 @@ entity FormulaModels  {
     key model : Association to TargetModels; 
 }
 
+@assert.unique: {unique_model_alias: [modelAlias]} 
 entity TargetModels: cuid, managed {
     targetModel : LargeString;
     schemaName : String(255);
@@ -56,3 +57,9 @@ entity ModelRelationshipAttributes : cuid, managed {
     // modelAlias : Association to TargetModels;
 }
 
+@cds.persistence.exists
+entity CVD_HANA_MODELS {
+    key SCHEMA_NAME : String(255);
+    key VIEW_NAME : String(255);
+        MODELALIAS : String(255);
+}
