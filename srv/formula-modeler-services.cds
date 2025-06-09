@@ -2,6 +2,7 @@ using Formulae as _formulae from '../db/data-model.cds';
 using FormulaModels as _formulamodels from '../db/data-model.cds';
 using TargetModels as _targetmodels from '../db/data-model.cds';
 using CVD_HANA_MODELS as _newModels  from '../db/data-model.cds';
+using CVD_MODEL_FIELDS as _modelFields from '../db/data-model.cds';
 
 
 service FormulaModelerServices {
@@ -14,6 +15,8 @@ service FormulaModelerServices {
     entity TargetModels  as projection on _targetmodels;
     // Main service to lookup new models
     entity NewModels as projection on _newModels;
+    // Service to know the fields of the models
+    entity ModelFields as projection on _modelFields;
 
     action buildFormulaOnModelbyFormulaID(formulaID : UUID,
                                  params : {

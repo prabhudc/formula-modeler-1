@@ -5,6 +5,7 @@ entity Formulae : cuid, managed {
     description : String(255);
     formula : LargeString;
     dataRetrievalProxyObject : String(255);
+    isValid : Boolean default false;
     Nodes : Composition of many Nodes on Nodes.formula = $self;
     Edges : Composition of many Edges on Edges.formula = $self;
     Models : Composition of many FormulaModels on Models.parent = $self;
@@ -30,7 +31,7 @@ entity Edges : cuid {
     edge_location : String(1) @assert.range: ['l', 'n', 'r'];
     formula : Association to Formulae;
 }
-
+// One or more modeles used in a formula 
 entity FormulaModels  {
     key parent : Association to Formulae;
     key model : Association to TargetModels; 
@@ -38,7 +39,7 @@ entity FormulaModels  {
 
 @assert.unique: {unique_model_alias: [modelAlias]} 
 entity TargetModels: cuid, managed {
-    targetModel : LargeString;
+    targetModel : String(255);
     schemaName : String(255);
     modelAlias : String(255);// Alias understandable to the user
 }
@@ -61,5 +62,16 @@ entity ModelRelationshipAttributes : cuid, managed {
 entity CVD_HANA_MODELS {
     key SCHEMA_NAME : String(255);
     key VIEW_NAME : String(255);
+        MODELALIAS : String(255);
+}
+
+
+
+@cds.persistence.exists
+entity CVD_MODEL_FIELDS {
+    key         ID : String(255);
+    key  COLUMN_NAME : String(255);
+        TARGETMODEL : String(255);
+        ATTRIBUTE_TYPE: String(10);
         MODELALIAS : String(255);
 }

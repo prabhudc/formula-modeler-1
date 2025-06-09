@@ -1,3 +1,7 @@
+
+###
+GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+
 ###
 GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Models&$expand=Nodes&$expand=Edges
 
@@ -116,4 +120,4 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('19292ad4-47ba-43bf-9e0c-94a382b859c2')
+DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('0f794ee4-f0cb-4b7f-8e76-96626f8c2dd8')

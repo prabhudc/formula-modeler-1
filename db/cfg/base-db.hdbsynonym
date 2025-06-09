@@ -10,5 +10,11 @@
       "object": "VIEWS",
       "schema": "SYS"
     }
+  },
+  "VIEW_COLUMNS": {
+    "target": {
+      "object": "VIEW_COLUMNS",
+      "schema": "SYS"
+    }
   }
 }
