@@ -1,0 +1,41 @@
+<mvc:View controllerName="fm.manager.controller.FMManagerView"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="{i18n>title}">
+    <VBox id="targetModelsVBox">
+            <Toolbar id="targetModelsToolbar" design="Auto">
+                <Title id="targetModelToolbarTitle" text="Target Models" level="H2"/>
+                <ToolbarSpacer id="targetModelToolbarSpacer"/>
+                <Button id="targetToolbarAdd" text="Add" icon="sap-icon://add" press="onAddNewTargetModel"/>
+                <Button id="targetToolbarDelete" text="Delete" icon="sap-icon://delete" press="onDeleteTargetModel" enabled="{= !!${targetModelsTable>/selectedContexts}.length }"/>
+                <Button id="targetToolbarSave" text="Save" icon="sap-icon://save" press="onSave"/>
+            </Toolbar>
+            <Table id="targetModelsTable"
+                   items="{/TargetModels}"
+                   mode="MultiSelect"
+                   selectionChange="onSelectionChange"
+                   backgroundDesign="Transparent">
+                <columns>
+                    <Column id="targetModelColumnId">
+                        <Text id="targetModelColumnTextId" text="Target Model"/>
+                    </Column>
+                    <Column id="schemaColumnId">
+                        <Text id="schemaColumnTextId" text="Schema Name"/>
+                    </Column>
+                    <Column id="modelAliasColumnId">
+                        <Text id="modelAliasColumnTextId" text="Model Alias"/>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem id="targetModelItemId">
+                        <cells>
+                            <Input id ="targetModelColumnItemId" value="{targetModel}" editable="false"/>
+                            <Input id ="schemaColumnItemId" value="{schemaName}" editable="false"/>
+                            <Input id ="modelAliasColumnItemId" value="{modelAlias}" editable="true"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+    </Page>
+</mvc:View>

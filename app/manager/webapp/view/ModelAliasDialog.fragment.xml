@@ -1,0 +1,16 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog id="modelAliasDialog" title="Enter Model Alias">
+        <VBox id="modelAliasVBox">
+            <Input
+                id="modelAliasInput"
+                maxLength="20"
+                liveChange="onModelAliasLiveChange"
+                placeholder="Enter alias (max 20 chars)"
+                valueLiveUpdate="true"/>
+            <Text id="modelAliasError" text="" visible="false"/>
+        </VBox>
+        <beginButton>
+            <Button id="modelAliasOk" text="OK" type="Emphasized" press="onModelAliasOk"/>
+        </beginButton>
+    </Dialog>
+</core:FragmentDefinition>

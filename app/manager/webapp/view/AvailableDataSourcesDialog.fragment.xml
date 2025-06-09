@@ -1,0 +1,21 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <SelectDialog
+        id="availableDataSourcesDialog"
+        title="Select Data Source"
+        noDataText="No data sources found"
+        search="onDataSourceSearch"
+        confirm="onDataSourceConfirm"
+        cancel="onDataSourceCancel"
+        items="{
+            path: '/NewModels',
+            sorter: { path: 'VIEW_NAME' }
+        }">
+        <StandardListItem
+            id="availableDataSourceItemFragmentId"
+            title="{VIEW_NAME}"
+            description="{SCHEMA_NAME}"
+            info="{MODELALIAS}"
+            icon="sap-icon://database"
+            type="Active"/>
+    </SelectDialog>
+</core:FragmentDefinition>

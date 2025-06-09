@@ -1,0 +1,32 @@
+{
+  "generator-ui5-project": {
+    "namespaceUI5": "fm",
+    "projectName": "fmui",
+    "uimoduleName": "fmmanager",
+    "enableFPM": false,
+    "platform": "SAP Build Work Zone, standard edition",
+    "ui5Libs": "Local resources (SAPUI5)",
+    "newDir": true,
+    "initRepo": false,
+    "projectId": "fm.fmui",
+    "uimodules": [
+      "fmmanager"
+    ]
+  },
+  "generator-ui5-app": {
+    "namespace": "fm",
+    "framework": "OpenUI5",
+    "frameworkVersion": "1.136.0",
+    "author": "Prabhu Dassan",
+    "initrepo": false,
+    "appId": "fm",
+    "appURI": "fm",
+    "cdnDomain": "sdk.openui5.org",
+    "defaultTheme": "sap_horizon",
+    "qunitCoverageFile": "qunit-coverage-istanbul.js",
+    "gte1_98_0": true,
+    "gte1_104_0": true,
+    "lt1_124_0": false,
+    "setupCompleted": true
+  }
+}
