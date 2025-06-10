@@ -6,6 +6,13 @@ GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae
 GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Models&$expand=Nodes&$expand=Edges
 
 ###
+# 0480103b-4867-4994-9fbd-7c14d4020d2d
+# Create a TargetModels.view.xml with a table bound to /FormulaModels?$expand=model&$filter=parent_ID eq '{formulaId}' and display the columns targetModel, schemaName, modelAlias from the expanded model.
+GET http://localhost:4004/odata/v4/formula-modeler-services/FormulaModels?$expand=model&$filter=parent_ID eq 'b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e'
+
+
+
+###
 POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
 Content-Type: application/json
 
@@ -121,3 +128,12 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('0f794ee4-f0cb-4b7f-8e76-96626f8c2dd8')
+
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/previewFormulaData
+Content-Type: application/json
+
+{
+    "formulaID": "2de85b35-37f0-4989-b20d-ff9722a736c4"
+}

@@ -130,5 +130,33 @@ module.exports = cds.service.impl(async function () {
       }
     );
 
+    this.on('previewFormulaData', async (req) => {
+        const formulaID = req.data.formulaID;
+        if (!formulaID) throw new Error("formulaID is required");
+
+        // Get the proxy object name from Formulae
+        const formula = await SELECT.one.from('Formulae').columns('dataRetrievalProxyObject').where({ ID: formulaID });
+        if (!formula || !formula.dataRetrievalProxyObject) {
+            req.error(400, `No dataRetrievalProxyObject found for formulaID ${formulaID}`);
+            return;
+        }
+
+        // Query the proxy object
+        let result;
+        try {
+            result = await cds.run(`SELECT top 10 * FROM "${formula.dataRetrievalProxyObject}"()`);
+        } catch (err) {
+            req.error(400, `Error querying proxy object: ${err.message}`);
+            return;
+        }
+
+        if (!result || result.length === 0) {
+            req.error(400, `No data found in proxy object for formulaID ${formulaID}`);
+            return;
+        }
+
+        // Ensure the result is an array of objects for UI5 table binding
+        return result;
+    });
     
 });

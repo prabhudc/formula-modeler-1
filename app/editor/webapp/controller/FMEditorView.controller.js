@@ -87,6 +87,7 @@ sap.ui.define([
                                 btn.setType(btn.getType() === "Emphasized" ? "Default" : "Emphasized");
                             }
                         });
+                        oButton.addStyleClass("sapUiTinyMarginEnd");
                         oVBox.addItem(oButton);
                     } else {
                         // Formula Fields: append to code editor on click
@@ -102,7 +103,7 @@ sap.ui.define([
                                 }
                                 oCodeEditor.setValue(sCurrent + sToAppend);
                             }
-                        }));
+                        }).addStyleClass("sapUiTinyMarginEnd"));
                     }
                 });
             }
@@ -219,23 +220,14 @@ sap.ui.define([
                 }));
             });
 
-            // Add the fixed RESULT column
-            oTable.addColumn(new sap.m.Column({
-                header: new sap.m.Text({ text: "RESULT" })
-            }));
-
-            // Bind items
-            var aTableItems = aData.map(function(row) {
+            // Add rows/items
+            aData.forEach(function(row) {
                 var aCells = [];
                 aColumns.forEach(function(col) {
                     aCells.push(new sap.m.Text({ text: row[col] }));
                 });
-                // Add the RESULT cell (assuming row.RESULT exists)
-                aCells.push(new sap.m.Text({ text: row.RESULT }));
-                return new sap.m.ColumnListItem({ cells: aCells });
+                oTable.addItem(new sap.m.ColumnListItem({ cells: aCells }));
             });
-
-            oTable.setItems(aTableItems);
 
             // Add the table to the VBox
             oVBox.addItem(oTable);
@@ -318,7 +310,6 @@ sap.ui.define([
             // 8. Call backend service "Formulae" (OData V4)
             var oFormulaModel = oView.getModel(); // Assumes default OData V4 model
             var oListBinding = oFormulaModel.bindList("/Formulae");
-
             var oContext = oListBinding.create(oPayload);
 
             // Attach to the created promise for success/error handling
@@ -334,7 +325,101 @@ sap.ui.define([
                 oView.byId("validateFormula").setEnabled(true);                
             }).catch(function() {
                 sap.m.MessageToast.show("Error saving formula.");
+                oView.byId("addFormulaToModel").setEnabled(true); // Keep enabled on error
             });
+        },
+        onValidateFormula: function () {
+            var oView = this.getView();
+            var that = this;
+
+            // 1. Get the formulaID from the "ui" model
+            var sFormulaId = oView.getModel("ui").getProperty("/WorkingCreatedFormulaId");
+            if (!sFormulaId) {
+                sap.m.MessageToast.show("No formula has been saved yet.");
+                return;
+            }
+
+            // 2. Get the selected key fields (emphasized buttons)
+            var oKeyFieldsHBox = oView.byId("keyFieldsButtonsContainer");
+            var aKeyButtons = oKeyFieldsHBox.getItems();
+            var aSelectedKeys = aKeyButtons
+                .filter(function(btn) {
+                    return btn.getType && btn.getType() === "Emphasized";
+                })
+                .map(function(btn) {
+                    return btn.getText();
+                });
+
+            if (aSelectedKeys.length === 0) {
+                sap.m.MessageToast.show("Please select at least one key field before validating.");
+                return;
+            }
+
+            // 3. Prepare payload
+            var oPayload = {
+                formulaID: sFormulaId,
+                params: {
+                    keys: aSelectedKeys,
+                    filters: []
+                }
+            };
+
+            // 4. Call backend OData V4 function import using bindContext
+            var oModel = oView.getModel(); // default OData V4 model
+            var oContext = oModel.bindContext("/buildFormulaOnModelbyFormulaID(...)");
+            oContext.setParameter("formulaID", oPayload.formulaID);
+            oContext.setParameter("params", oPayload.params);
+
+            oContext.execute().then(function() {
+                sap.m.MessageToast.show("Formula validated successfully.");
+                oView.byId("validateFormula").setEnabled(false); // Disable button on success
+
+                // --- Additional logic: Call previewFormulaData and render table ---
+                var oPreviewContext = oModel.bindContext("/previewFormulaData(...)"); // Adjust the function import path as needed
+                oPreviewContext.setParameter("formulaID", sFormulaId);
+
+                oPreviewContext.execute().then(function() {
+                    oPreviewContext.requestObject().then(function(oResult) {
+                        var aData = (oResult && oResult.value) ? oResult.value : [];
+
+                        if (!aData.length) {
+                            sap.m.MessageToast.show("No preview data available.");
+                            return;
+                        }
+
+                        // Collect all unique keys except O_CALCULATED
+                        var aColumns = [];
+                        aData.forEach(function(row) {
+                            Object.keys(row).forEach(function(key) {
+                                if (key !== "O_CALCULATED" && aColumns.indexOf(key) === -1) {
+                                    aColumns.push(key);
+                                }
+                            });
+                        });
+                        // Always add O_CALCULATED at the end
+                        aColumns.push("O_CALCULATED");
+
+                        // Render the table under dynamicTableContainer
+                        that._createDynamicTable(aColumns, aData);
+
+                    }).catch(function(oError) {
+                        var sMsg = (oError && oError.message) || "Preview failed.";
+                        sap.m.MessageToast.show(sMsg);
+                    });
+                }).catch(function(oError) {
+                    var sMsg = (oError && oError.message) || "Validation failed.";
+                    sap.m.MessageToast.show(sMsg);
+                    oView.byId("validateFormula").setEnabled(true); // Keep enabled on error
+                });
+            }).catch(function(oError) {
+                var sMsg = (oError && oError.message) || "Validation failed.";
+                sap.m.MessageToast.show(sMsg);
+                oView.byId("validateFormula").setEnabled(true); // Keep enabled on error
+            });
+        },
+        onReturnToLanding: function () {
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("landing");
         }
 
     });

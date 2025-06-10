@@ -62,7 +62,8 @@
       "minUI5Version": "1.136.1",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.ui.core": {},
+        "sap.ui.comp": {}
       }
     },
     "contentDensities": {
@@ -96,28 +97,43 @@
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
-        "controlAggregation": "pages",
-        "controlId": "editorapp",
-        "transition": "slide",
-        "type": "View",
         "viewType": "XML",
-        "path": "fm.editor.view",
-        "async": true,
-        "viewPath": "fm.editor.view"
+        "viewPath": "fm.editor.view",
+        "controlId": "fmapp",
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": "landing"
+        }
       },
       "routes": [
         {
-          "name": "RouteFMEditorView",
-          "pattern": ":?query:",
-          "target": [
-            "TargetFMEditorView"
-          ]
+          "pattern": "",
+          "name": "landing",
+          "target": "landing"
+        },
+        {
+          "pattern": "editor",
+          "name": "editor",
+          "target": "editor"
+        },
+        {
+          "pattern": "targetModels/{formulaId}",
+          "name": "targetModels",
+          "target": "targetModels"
         }
       ],
       "targets": {
-        "TargetFMEditorView": {
-          "id": "FMEditorView",
-          "name": "FMEditorView"
+        "landing": {
+          "viewName": "FMLandingPage",
+          "viewLevel": 0
+        },
+        "editor": {
+          "viewName": "FMEditorView",
+          "viewLevel": 1
+        },
+        "targetModels": {
+          "viewName": "TargetModels",
+          "viewLevel": 2
         }
       }
     },
