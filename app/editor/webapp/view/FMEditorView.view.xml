@@ -1,70 +1,163 @@
 <mvc:View controllerName="fm.editor.controller.FMEditorView"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    xmlns:ce="sap.ui.codeeditor">
-    <Page id="fmeditorpage" title="{i18n>title}">
-        <Wizard id="fmEditorWizard">
-            <!-- Step 1: Select Models -->
-            <WizardStep id="selectModelsStep" title="Select Models" validated="true">
-                <VBox>
-                    <Text text="Select one or more models from the list below:"/>
-                    <Table id="targetModelsTable"
-                           items="{/TargetModels}"
-                           mode="MultiSelect"
-                           selectionChange="onTargetModelsSelectionChange">
-                        <columns>
-                            <Column>
-                                <Text text="Model Name"/>
-                            </Column>
-                            <Column>
-                                <Text text="Schema Name"/>
-                            </Column>
-                            <Column>
-                                <Text text="Model Alias"/>
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{targetModel}"/>
-                                    <Text text="{schemaName}"/>
-                                    <Text text="{modelAlias}"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                    <Button text="Select Models"
-                            type="Emphasized"
-                            press="onSelectModels"
-                            enabled="{= !!${targetModelsTable>/selectedContexts}.length }"/>
-                </VBox>
-            </WizardStep>
-            <!-- Step 2: Formula Details -->
-            <WizardStep id="formulaDetailsStep" title="Formula Details" validated="false">
-                <VBox>
-                    <Input id="formulaNameInput"
-                           placeholder="Enter Formula Name"
-                           required="true"
-                           valueLiveUpdate="true"
-                           liveChange="onFormulaNameChange"/>
-                    <Input id="formulaDescriptionInput"
-                           placeholder="Enter Formula Description"
-                           required="true"
-                           valueLiveUpdate="true"
-                           liveChange="onFormulaDescriptionChange"/>
-                    <ce:CodeEditor
-                        id="formulaCodeEditor"
-                        type="matlab"
-                        height="200px"
-                        width="100%"
-                        value=""
-                        required="true"
-                        liveChange="onFormulaCodeChange"
-                        maxLength="4096"
-                        colorTheme="monokai"
-                        placeholder="Enter formula code here"/>
-                </VBox>
-            </WizardStep>
-        </Wizard>
-    </Page>
+    xmlns:ce="sap.ui.codeeditor"
+    xmlns:core="sap.ui.core"
+    height="100%">
+    <!-- <Page id="fmeditorpage" title="{i18n>title}"> -->
+    <VBox height="100%" width="100%">
+        <Button
+            id="returnToLandingButton"
+            text="Return"
+            icon="sap-icon://nav-back"
+            press="onReturnToLanding"
+            class="sapUiTinyMarginBottom"/>
+        <Panel
+            width="90%"
+            height="100%"
+            class="sapUiResponsiveMargin">
+            <Wizard id="fmEditorWizard" 
+                    width="100%"
+                    height="100%"
+                    finishButtonText="New Formula"
+                    class="sapUiResponsiveContentPadding">
+                <!-- Step 1: Select Models -->
+                <WizardStep id="selectModelsStep" title="Select Models" validated="false">
+                    <VBox>
+                        <Text text="Select one or more models from the list below:"/>
+                        <Table id="targetModelsTable"
+                               items="{/TargetModels}"
+                               mode="MultiSelect"
+                               selectionChange="onTargetModelsSelectionChange">
+                            <columns>
+                                <Column>
+                                    <Text text="Model Name"/>
+                                </Column>
+                                <Column>
+                                    <Text text="Schema Name"/>
+                                </Column>
+                                <Column>
+                                    <Text text="Model Alias"/>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{targetModel}"/>
+                                        <Text text="{schemaName}"/>
+                                        <Text text="{modelAlias}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        <!-- <Button text="Select Models"
+                                type="Emphasized"
+                                press="onSelectModels"
+                                enabled="{= !!${targetModelsTable>/selectedContexts}.length }"/> -->
+                    </VBox>
+                </WizardStep>
+                <!-- Step 2: Build Formula-->
+                <WizardStep
+                    id="formulaDetailsStep"
+                    title="Build Formula"
+                    validated="false">
+                    <!-- Header fields and Key Fields side by side -->
+                    <HBox width="100%">
+                        <!-- Formula Name and Description -->
+                        <VBox id="formulaHeaderFields" width="35%">
+                            <Input
+                                id="formulaNameInput"
+                                placeholder="Enter Formula Name"
+                                required="true"
+                                valueLiveUpdate="true"
+                                liveChange="onFormulaNameChange"
+                                maxLength="255"
+                                showValueHelp="false"
+                                description=""
+                                tooltip="Max 255 chars, no spaces, only letters, numbers, and underscores"
+                                width="100%"/>
+                            <TextArea
+                                id="formulaDescriptionInput"
+                                placeholder="Enter Formula Description"
+                                required="true"
+                                valueLiveUpdate="true"
+                                liveChange="onFormulaDescriptionChange"
+                                rows="3"
+                                growing="true"
+                                width="100%"/>
+                        </VBox>
+                        <!-- Key Fields Section moved here -->
+                        <VBox id="keyFieldsSection" width="30%" class="sapUiSmallMarginBegin">
+                            <HBox>
+                                <core:Icon src="sap-icon://key" decorative="false" tooltip="Key Fields"/>
+                                <Title text="Key Fields" level="H5" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                            <HBox id="keyFieldsButtonsContainer" wrap="Wrap"/>
+                        </VBox>
+                    </HBox>
+                    <!-- Two columns layout -->
+                    <HBox width="100%">
+                        <!-- First column: 35% width, only Formula Fields now -->
+                        <VBox width="35%" >
+                            <!-- Formula Fields Section -->
+                            <VBox>
+                                <HBox class="sapUiSmallMarginBottom sapUiTinyMarginTop">
+                                    <core:Icon src="sap-icon://measure" decorative="false" tooltip="Formula Fields"/>
+                                    <Title text="Formula Fields" level="H5" class="sapUiTinyMarginBegin"/>
+                                </HBox>
+                                <HBox id="formulaFieldsButtonsContainer" wrap="Wrap" class="sapUiSmallMarginBottom"/>
+                            </VBox>
+                            <!-- Operator Buttons Section -->
+                            <HBox class="sapUiSmallMarginBottom sapUiTinyMarginTop">
+                                <core:Icon src="sap-icon://overflow" decorative="false" tooltip="Operators"/>
+                                <Title text="Operators" level="H5" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                            <HBox id="operatorButtonsContainer" class="sapUiSmallMarginBottom" wrap="Wrap">
+                                <Button text="+" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="-" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="*" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="/" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="(" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text=")" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                            </HBox>
+                        </VBox>
+                        <!-- Second column: 65% width, code editor -->
+                        <VBox width="65%">
+                            <Toolbar>
+                                <core:Icon src="sap-icon://calculator" decorative="false" tooltip="Formula Editor" class="sapUiTinyMarginEnd"/>
+                                <Title text="Formula Editor"/>
+                                <ToolbarSpacer/>
+                            </Toolbar>
+                            <ce:CodeEditor
+                                id="formulaCodeEditor"
+                                type="text"
+                                height="200px"
+                                width="100%"
+                                liveChange="onFormulaCodeChange"
+                                colorTheme="gruvbox"
+                                syntaxHints="true"/>
+                        </VBox>
+                    </HBox>
+                </WizardStep>
+                <!-- Step 3: Apply Formula -->
+                <WizardStep id="formulaApplyWorkbench" title="Validate and Save" validated="true">
+                <Button 
+                    id="addFormulaToModel" 
+                    text="Save Formula" 
+                    press="onSaveFormulaToDB"
+                    enabled="true"
+                    type="Emphasized"></Button>
+                <Button
+                    id="validateFormula"
+                    text="Validate"
+                    enabled="false"
+                    press="onValidateFormula"
+                    type="Emphasized" 
+                    />
+                    <VBox id="dynamicTableContainer"/>
+                </WizardStep>
+            </Wizard>
+        </Panel>
+    </VBox>
+    <!-- </Page> -->
 </mvc:View>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CVD_MODEL_FIELDS" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CVD_MODEL_FIELDS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TARGETMODELS">
+    <resourceUri>TARGETMODELS</resourceUri>
+  </DataSource>
+  <DataSource id="VIEW_COLUMNS">
+    <resourceUri>VIEW_COLUMNS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="targetmodels">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="SCHEMANAME"/>
+      <viewAttribute id="MODELALIAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TARGETMODELS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="view_columns">
+    <viewAttributes>
+      <viewAttribute id="VIEW_NAME"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute id="DATA_TYPE_NAME"/>
+      <viewAttribute id="SCHEMA_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="VIEW_COLUMNS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="rename_cols" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute id="DATA_TYPE_NAME"/>
+      <viewAttribute id="MODELALIAS"/>
+      <viewAttribute hidden="true" id="JOIN$SCHEMANAME$SCHEMA_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$TARGETMODEL$VIEW_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="targetmodels">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGETMODEL" source="TARGETMODEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODELALIAS" source="MODELALIAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCHEMANAME$SCHEMA_NAME" source="SCHEMANAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TARGETMODEL$VIEW_NAME" source="TARGETMODEL"/>
+    </input>
+    <input node="view_columns">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATA_TYPE_NAME" source="DATA_TYPE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCHEMANAME$SCHEMA_NAME" source="SCHEMA_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TARGETMODEL$VIEW_NAME" source="VIEW_NAME"/>
+    </input>
+    <joinAttribute name="JOIN$SCHEMANAME$SCHEMA_NAME"/>
+    <joinAttribute name="JOIN$TARGETMODEL$VIEW_NAME"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="keys" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute id="DATA_TYPE_NAME"/>
+    
+      <viewAttribute id="MODELALIAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ATTRIBUTE_TYPE" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>'key'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="rename_cols"/>
+    <filter>&quot;DATA_TYPE_NAME&quot; in ('INTEGER', 'NVARCHAR', 'TIMESTAMP', 'TIME', 'TINYINT', 'SMALLINT', 'DATE', 'SECONDDATE', 'BOOLEAN')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="formula_fields" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute id="DATA_TYPE_NAME"/>
+    
+      <viewAttribute id="MODELALIAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ATTRIBUTE_TYPE" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>'numeric'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="rename_cols"/>
+    <filter>&quot;DATA_TYPE_NAME&quot; in ('DOUBLE', 'REAL', 'DECIMAL')  </filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="combine_all">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute id="DATA_TYPE_NAME"/>
+      <viewAttribute id="ATTRIBUTE_TYPE"/>
+      <viewAttribute id="MODELALIAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="keys" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGETMODEL" source="TARGETMODEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATA_TYPE_NAME" source="DATA_TYPE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATTRIBUTE_TYPE" source="ATTRIBUTE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODELALIAS" source="MODELALIAS"/>
+    </input>
+    <input node="formula_fields" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGETMODEL" source="TARGETMODEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATA_TYPE_NAME" source="DATA_TYPE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATTRIBUTE_TYPE" source="ATTRIBUTE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODELALIAS" source="MODELALIAS"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="combine_all">
+  <attributes>
+    <attribute id="ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ID"/>
+      <keyMapping columnObjectName="combine_all" columnName="ID"/>
+    </attribute>
+    <attribute id="TARGETMODEL" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TARGETMODEL"/>
+      <keyMapping columnObjectName="combine_all" columnName="TARGETMODEL"/>
+    </attribute>
+    <attribute id="COLUMN_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLUMN_NAME"/>
+      <keyMapping columnObjectName="combine_all" columnName="COLUMN_NAME"/>
+    </attribute>
+    <attribute id="DATA_TYPE_NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DATA_TYPE_NAME"/>
+      <keyMapping columnObjectName="combine_all" columnName="DATA_TYPE_NAME"/>
+    </attribute>
+    <attribute id="ATTRIBUTE_TYPE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ATTRIBUTE_TYPE"/>
+      <keyMapping columnObjectName="combine_all" columnName="ATTRIBUTE_TYPE"/>
+    </attribute>
+    <attribute id="MODELALIAS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODELALIAS"/>
+      <keyMapping columnObjectName="combine_all" columnName="MODELALIAS"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="243" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="targetmodels" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="view_columns" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="rename_cols" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="134" y="481"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="targetmodels" modelObjectNameSpace="rename_cols" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="139"/>
+    </shape>
+    <shape modelObjectName="view_columns" modelObjectNameSpace="rename_cols" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="186"/>
+    </shape>
+    <shape expanded="true" modelObjectName="keys" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="317" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="formula_fields" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="107" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="combine_all" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="243" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

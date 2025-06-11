@@ -1,0 +1,46 @@
+<mvc:View
+    controllerName="fm.editor.controller.TargetModels"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="TargetModelsPage" title="Target Models">
+        <content>
+            <Button
+                id="returnToLandingFromTargetModelsButton"
+                text="Return"
+                type="Default"
+                press="onReturnToLandingFromTargetModels"
+                icon="sap-icon://nav-back"
+                class="sapUiTinyMarginBottom"/>
+            <Panel
+                width="80%"
+                headerText="Target Models"
+                expandable="false"
+                class="sapUiResponsiveMargin">
+                <Table
+                    id="targetModelsNavTable"
+                    width="100%">
+                    <columns>
+                        <Column>
+                            <Text text="Target Model"/>
+                        </Column>
+                        <Column>
+                            <Text text="Schema Name"/>
+                        </Column>
+                        <Column>
+                            <Text text="Model Alias"/>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{model/targetModel}"/>
+                                <Text text="{model/schemaName}"/>
+                                <Text text="{model/modelAlias}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>

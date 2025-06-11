@@ -1,0 +1,78 @@
+<mvc:View
+    controllerName="fm.editor.controller.FMLandingPage"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="FMLandingPage" title="Formula Modeler">
+        <content>
+            <VBox
+                id="formulaeListVbox"
+                width="100%"
+                alignItems="Center"
+                class="sapUiMediumMargin">
+                <Panel
+                    width="80%"
+                    headerText="Available Formulae"
+                    expandable="false"
+                    class="sapUiResponsiveMargin">
+                    <VBox>
+                        <HBox justifyContent="End" class="sapUiSmallMarginBottom">
+                            <Button
+                                id="editLandingPage"
+                                icon="sap-icon://edit"
+                                type="Default"
+                                tooltip="Edit"
+                                press="onToggleEditMode"
+                                class="sapUiTinyMargin"/>
+                            <Button
+                                id="deleteFormulaButton"
+                                icon="sap-icon://delete"
+                                type="Reject"
+                                tooltip="Delete Selected"
+                                enabled="false"
+                                press="onDeleteSelectedFormula"
+                                class="sapUiTinyMargin"/>
+                            <Button
+                                id="createFormulaNavButton"
+                                type="Emphasized"
+                                icon="sap-icon://create"
+                                press="onNavigateToEditor"
+                                class="sapUiTinyMargin"/>
+                        </HBox>
+                        <Table
+                            id="formulaeTable"
+                            items="{/Formulae}"
+                            width="100%"
+                            mode="None"
+                            class="sapUiResponsiveMargin"
+                            selectionChange="onFormulaSelectionChange">
+                            <columns>
+                                <Column>
+                                    <Text text="Title"/>
+                                </Column>
+                                <Column>
+                                    <Text text="Description"/>
+                                </Column>
+                                <Column>
+                                    <Text text="Formula"/>
+                                </Column>
+                                <Column>
+                                    <Text text="Proxy DB Object"/>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem press="onFormulaPress" type="Active">
+                                    <cells>
+                                        <Text text="{title}"/>
+                                        <Text text="{description}"/>
+                                        <Text text="{formula}"/>
+                                        <Text text="{dataRetrievalProxyObject}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </VBox>
+                </Panel>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

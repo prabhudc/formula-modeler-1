@@ -88,7 +88,9 @@
   
     <attribute id="MODELALIAS" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MODELALIAS"/>
+  
       <keyMapping columnObjectName="filter_models" columnName="MODELALIAS"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
