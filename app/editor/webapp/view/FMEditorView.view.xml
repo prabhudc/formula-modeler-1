@@ -98,15 +98,28 @@
                     <!-- Two columns layout -->
                     <HBox width="100%">
                         <!-- First column: 35% width, only Formula Fields now -->
-                        <VBox width="35%" id="vboxFormulaAttributes">
+                        <VBox width="35%" >
                             <!-- Formula Fields Section -->
                             <VBox>
-                                <HBox>
+                                <HBox class="sapUiSmallMarginBottom sapUiTinyMarginTop">
                                     <core:Icon src="sap-icon://measure" decorative="false" tooltip="Formula Fields"/>
                                     <Title text="Formula Fields" level="H5" class="sapUiTinyMarginBegin"/>
                                 </HBox>
-                                <HBox id="formulaFieldsButtonsContainer" wrap="Wrap"/>
+                                <HBox id="formulaFieldsButtonsContainer" wrap="Wrap" class="sapUiSmallMarginBottom"/>
                             </VBox>
+                            <!-- Operator Buttons Section -->
+                            <HBox class="sapUiSmallMarginBottom sapUiTinyMarginTop">
+                                <core:Icon src="sap-icon://overflow" decorative="false" tooltip="Operators"/>
+                                <Title text="Operators" level="H5" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                            <HBox id="operatorButtonsContainer" class="sapUiSmallMarginBottom" wrap="Wrap">
+                                <Button text="+" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="-" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="*" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="/" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="(" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text=")" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                            </HBox>
                         </VBox>
                         <!-- Second column: 65% width, code editor -->
                         <VBox width="65%">
@@ -117,7 +130,7 @@
                             </Toolbar>
                             <ce:CodeEditor
                                 id="formulaCodeEditor"
-                                type="formulaModeler"
+                                type="text"
                                 height="200px"
                                 width="100%"
                                 liveChange="onFormulaCodeChange"

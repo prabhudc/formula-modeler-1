@@ -34,8 +34,5 @@ service FormulaModelerServices {
     // Perform data preview of a formula
     action previewFormulaData(formulaID: UUID) returns array of {};
 }
- 
 
-service SandboxService {
-    action createFormula(title : String, description : String, formula : String, modelAliases : array of String);
-}
+

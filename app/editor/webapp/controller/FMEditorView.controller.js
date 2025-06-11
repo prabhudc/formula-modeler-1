@@ -420,6 +420,16 @@ sap.ui.define([
         onReturnToLanding: function () {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("landing");
+        },
+        onOperatorButtonPress: function(oEvent) {
+            var sOperator = oEvent.getSource().getText();
+            var oCodeEditor = this.byId("formulaCodeEditor");
+            var sCurrent = oCodeEditor.getValue() || "";
+            // Add a space before the operator if needed
+            if (sCurrent && !/\s$/.test(sCurrent)) {
+                sCurrent += " ";
+            }
+            oCodeEditor.setValue(sCurrent + sOperator);
         }
 
     });
