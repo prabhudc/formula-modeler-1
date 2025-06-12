@@ -137,3 +137,36 @@ Content-Type: application/json
 {
     "formulaID": "2de85b35-37f0-4989-b20d-ff9722a736c4"
 }
+###
+
+
+POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModelbyFormulaID
+Content-Type: application/json
+
+{
+    "formulaID": "04db2f8a-bc83-4762-a97e-3375c6aa77df",
+    "params" : {
+        "keys": ["category"],
+        "filters" : []
+    }
+}
+
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+      "title": "f_test_25",
+      "description": "Formula 25",
+      "formula": "max( volume )",
+      "Models": [
+        {
+          "model_ID": "6a3e9f1b-2d8c-4a7d-9f3e-12c4d5e6f7a8"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "f_test_25"
+          }
+      ]
+    }

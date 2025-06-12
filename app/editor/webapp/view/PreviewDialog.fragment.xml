@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog id="previewDialog" title="Preview Data" contentWidth="60%" contentHeight="60%" draggable="true" resizable="true">
+        <VBox id="previewDialogVBox"/>
+        <endButton>
+            <Button text="Close" press="onClosePreviewDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

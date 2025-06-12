@@ -46,6 +46,9 @@
                             class="sapUiResponsiveMargin"
                             selectionChange="onFormulaSelectionChange">
                             <columns>
+                                <Column width="2rem">
+                                    <Text text=""/>
+                                </Column>
                                 <Column>
                                     <Text text="Title"/>
                                 </Column>
@@ -55,6 +58,9 @@
                                 <Column>
                                     <Text text="Formula"/>
                                 </Column>
+                                <Column width="2.5rem">
+                                    <Text text=""/>
+                                </Column>
                                 <Column>
                                     <Text text="Proxy DB Object"/>
                                 </Column>
@@ -62,9 +68,23 @@
                             <items>
                                 <ColumnListItem press="onFormulaPress" type="Active">
                                     <cells>
+                                        <Button
+                                            icon="sap-icon://copy"
+                                            type="Transparent"
+                                            press="onCopyFormulaId"
+                                            tooltip="Copy Formula ID"
+                                        />
                                         <Text text="{title}"/>
                                         <Text text="{description}"/>
                                         <Text text="{formula}"/>
+                                        <!-- Preview Button: only visible if dataRetrievalProxyObject is not empty -->
+                                        <Button
+                                            icon="sap-icon://search"
+                                            type="Transparent"
+                                            press="onPreviewFormulaData"
+                                            tooltip="Preview Data"
+                                            visible="{= !!${dataRetrievalProxyObject} }"
+                                        />
                                         <Text text="{dataRetrievalProxyObject}"/>
                                     </cells>
                                 </ColumnListItem>

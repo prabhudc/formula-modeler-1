@@ -1,6 +1,6 @@
-
 const cds = require("@sap/cds");
 const math = require("mathjs");
+const DEFAULTS = require("./constants").DEFAULTS;
 
 module.exports = {
   getFormulaById: async function (formulaID) {
@@ -116,13 +116,24 @@ module.exports = {
                 order by position`);
     if (!keySelectFieldDataTypes || keySelectFieldDataTypes.length !== keyAttributeList.length) 
       throw new Error("Unable to retrieve the data types of the key attributes (buildDataRetrievalProxyObject) ");
-    
+
+    // Check for aggregation functions in the formula
+    const formulaNoSpaces = responseFormula.P_FORMULA.replace(/\s+/g, '').toLowerCase();
+    const hasAggregation = DEFAULTS.supportedAggregationFunctions
+        .map(fn => fn + '(')
+        .some(fnWithParen => formulaNoSpaces.includes(fnWithParen));
+
+    let groupByClause = "";
+    if (hasAggregation) {
+      groupByClause = ` group by \"${keySelectFieldDataTypes.map((item) => item.COLUMN_NAME).join('","')}\"`;
+    }
+
     const createDataRetrievalProxyObject = `create or replace function "${dataRetrievalProxyObject}" ()
       returns table (${keySelectFieldDataTypes.map((item) => item.COLUMN_DATA_TYPES).join(',')}, O_CALCULATED Decimal(20,5))
       as begin
-          return select "${keySelectFieldDataTypes.map((item) => item.COLUMN_NAME).join('","')}", ${responseFormula.P_FORMULA} as O_CALCULATED from ${responseTargetModel.schemaName}.\"${responseTargetModel.targetModel}\";
+          return select "${keySelectFieldDataTypes.map((item) => item.COLUMN_NAME).join('","')}", ${responseFormula.P_FORMULA} as O_CALCULATED 
+                 from ${responseTargetModel.schemaName}.\"${responseTargetModel.targetModel}\"${groupByClause};
       end;`
-    
 
     return createDataRetrievalProxyObject; 
   },
@@ -144,8 +155,11 @@ module.exports = {
       const rootNodeID = cds.utils.uuid();
       // Go over the AST and assign UUIDs to each node
       // will be used as ID for Nodes entity
+
+      const symbolNodeSkipArray = DEFAULTS.supportedAggregationFunctions; 
+
       ast.traverse(function(node,path,parent) {
-        if (node.type === 'OperatorNode' || node.type === 'ConstantNode' || node.type === 'SymbolNode') {
+        if (node.type === 'OperatorNode' || node.type === 'ConstantNode' || node.type === 'SymbolNode' || node.type === 'FunctionNode') {
           node.ID = cds.utils.uuid();
         } else {
           node.ID = parent ? parent.ID:rootNodeID;
@@ -173,7 +187,7 @@ module.exports = {
       ast.traverse(function (node, path, parent) {
         if (edgeArray.length === 0) {
           edgeLocation = 'n';
-        } else if (parent && parentNodeIDSet.has(parent.ID)) {
+        } else if (parent && parentNodeIDSet.has(parent.ID) && parent.type !== 'FunctionNode') {
           edgeLocation = 'r';
         } else if (parent && !parentNodeIDSet.has(parent.ID)) {
           parentNodeIDSet.add(parent.ID);
@@ -226,6 +240,9 @@ module.exports = {
 
             break
           case 'SymbolNode':
+          // Skip certain symbol nodes  
+          if (symbolNodeSkipArray.includes(node.name.toLowerCase())) break; 
+             
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,
@@ -245,6 +262,29 @@ module.exports = {
               formula_ID: formulaID
             });
 
+            break
+            case 'FunctionNode':
+            if (!symbolNodeSkipArray.includes(node.fn.toString().toLowerCase())){
+              throw new Error(`Function ${node.fn} is not supported in the formula AST`);
+            } 
+            nodeArray.push({
+              ID: node.ID,
+              node_is_root: false,
+              node_is_leaf: false,
+              node_is_constant: false,
+              node_is_variable: false,
+              node_operator: node.fn.toString().toLowerCase(),
+              node_operand: '',
+              node_formula: '',
+              formula_ID: formulaID
+            });
+            edgeArray.push({
+              ID: cds.utils.uuid(),
+              start_ID: parent ? parent.ID : rootNodeID,
+              end_ID: node.ID,
+              edge_location: edgeLocation,
+              formula_ID: formulaID
+            });
             break
           default:
             cds.log().info("Skipped Node",node.type)
