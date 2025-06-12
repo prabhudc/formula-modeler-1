@@ -28,14 +28,14 @@ Learn more at https://cap.cloud.sap/docs/get-started/.
 
 ## Overview
 
-**Formula Modeler** is a full-stack application designed to empower users to create and manage formulas on curated data models, specifically for use with SAP HANA Cloud. The tool enables centralized formula management and high-performance, in-memory calculations, making it easy for various business applications to consume and leverage these formulas without duplicating data.
+**Formula Modeler** is a full-stack application designed for to be used by end users to create and manage formulas on IT curated data models(HANA). The tool enables centralized formula management and high-performance, in-memory calculations, making it easy for various business applications to consume and leverage these formulas without duplicating data.
 
 ---
 
 ## Key Features
 
 - **Centralized Formula Management:** Maintain all business formulas in a single, standalone application.
-- **Flexible Consumption:** Formulas can be consumed by multiple business applications (e.g., Sales, Finance, Pricing) without code duplication.
+- **Flexible Consumption:** Formulas can be consumed by multiple business applications (e.g., Sales, Finance, Pricing) without data or code duplication.
 - **In-Memory Calculation:** All calculations are performed directly in the HANA database for optimal performance.
 - **No Data Duplication:** Formula Modeler creates database objects for querying and consuming data, rather than copying data between applications.
 
@@ -44,7 +44,7 @@ Learn more at https://cap.cloud.sap/docs/get-started/.
 ## How It Works
 
 - Multiple business applications (such as Sales, Finance, Pricing) each have their own application containers and curated HANA models.
-- Formula Modeler operates independently, allowing users to define and maintain formulas centrally.
+- Formula Modeler operates independently, allowing users to define and maintain formulas centrally on top of the application hana models.
 - These formulas are then available for consumption by any business application, either through their application/service layer or directly via the database.
 - The only requirement for integration is that each business application must grant the necessary privileges (via an `hdbrole`) to expose its HANA models and data to Formula Modeler.
 
