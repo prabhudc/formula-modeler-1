@@ -79,7 +79,7 @@ graph TD
         C1[SAPUI5 UI]
         C2[Node.js Service Layer]
     end
-
+    C1 --> C2
     A1 --> B1
     A2 --> B2
     A3 --> B3
@@ -87,8 +87,8 @@ graph TD
     B1 -- consume via. DB --> B4
     B2 -- consume via. DB --> B4
     B3 -- consume via. DB --> B4 
-    B1 -- comsume via. api (FM ID) --> C2
-    B2 -- consume via. api(FM ID) --> C2
-    B3 -- consume via. api(FM ID) --> C2
+    A1 -- comsume via. api (FM ID) --> C2
+    A2 -- consume via. api(FM ID) --> C2
+    A3 -- consume via. api(FM ID) --> C2
 
 ```
