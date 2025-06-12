@@ -62,32 +62,33 @@ The Formula Modeler solution consists of three main layers:
 
 ```mermaid
 graph TD
+    subgraph Formula Modeler
+        C1[SAPUI5 UI]
+        C2[Node.js Service Layer]
+    end
+
     subgraph Business Applications
         A1[Sales App] 
         A2[Finance App]
         A3[Pricing App]
     end
 
-    subgraph HANA Cloud
+    subgraph HANA Cloud[HANA Cloud (Curated Models & FM DB Objects)]
         B1[Sales HANA Models]
         B2[Finance HANA Models]
         B3[Pricing HANA Models]
         B4[FM DB objects]
     end
 
-    subgraph Formula Modeler
-        C1[SAPUI5 UI]
-        C2[Node.js Service Layer]
-    end
     C1 --> C2
+    C2 --> B4
     A1 --> B1
     A2 --> B2
     A3 --> B3
-    C2 --> B4
     B1 -- consume via. DB --> B4
     B2 -- consume via. DB --> B4
     B3 -- consume via. DB --> B4 
-    A1 -- comsume via. api (FM ID) --> C2
+    A1 -- consume via. api (FM ID) --> C2
     A2 -- consume via. api(FM ID) --> C2
     A3 -- consume via. api(FM ID) --> C2
 
