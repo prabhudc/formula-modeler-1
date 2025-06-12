@@ -69,8 +69,10 @@ graph TD
     end
 
     subgraph HANA Cloud
-        B1[Curated HANA Models]
-        B2[Formula Modeler DB Objects]
+        B1[Sales HANA Models]
+        B2[Finance HANA Models]
+        B3[Pricing HANA Models]
+        B4[FM DB objects]
     end
 
     subgraph Formula Modeler
@@ -78,14 +80,15 @@ graph TD
         C2[Node.js Service Layer]
     end
 
-    A1 -- hdbrole grants --> B1
-    A2 -- hdbrole grants --> B1
-    A3 -- hdbrole grants --> B1
-    C1 -- UI/API --> C2
-    C2 -- SQL/Calculation --> B2
-    B2 -- Queries --> B1
-    C2 -- Consumes Models --> B1
-    A1 -- Consumes Formula Results --> B2
-    A2 -- Consumes Formula Results --> B2
-    A3 -- Consumes Formula Results --> B2
+    A1 --> B1
+    A2 --> B2
+    A3 --> B3
+    C2 --> B4
+    B1 -- consume via. DB --> B4
+    B2 -- consume via. DB --> B4
+    B3 -- consume via. DB --> B4 
+    B1 -- comsume via. api (FM ID) --> C2
+    B2 -- consume via. api(FM ID) --> C2
+    B3 -- consume via. api(FM ID) --> C2
+
 ```
