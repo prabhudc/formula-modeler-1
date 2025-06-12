@@ -61,35 +61,37 @@ The Formula Modeler solution consists of three main layers:
 ### Architecture Block Diagram
 
 ```mermaid
-graph TD
-    subgraph Formula Modeler
+flowchart TD
+    %% Top row: Formula Modeler and Business Applications
+    subgraph FM["Formula Modeler"]
         C1[SAPUI5 UI]
         C2[Node.js Service Layer]
+        C1 --> C2
     end
 
-    subgraph Business Applications
-        A1[Sales App] 
+    subgraph BA["Business Applications"]
+        A1[Sales App]
         A2[Finance App]
         A3[Pricing App]
     end
 
-    subgraph HANA Cloud[HANA Cloud (Curated Models & FM DB Objects)]
+    %% Wide HANA Cloud layer
+    subgraph HC["HANA Cloud (Curated Models & FM DB Objects)"]
         B1[Sales HANA Models]
         B2[Finance HANA Models]
         B3[Pricing HANA Models]
         B4[FM DB objects]
     end
 
-    C1 --> C2
+    %% Connections
     C2 --> B4
     A1 --> B1
     A2 --> B2
     A3 --> B3
-    B1 -- consume via. DB --> B4
-    B2 -- consume via. DB --> B4
-    B3 -- consume via. DB --> B4 
-    A1 -- consume via. api (FM ID) --> C2
-    A2 -- consume via. api(FM ID) --> C2
-    A3 -- consume via. api(FM ID) --> C2
-
+    B1 -- consume via DB --> B4
+    B2 -- consume via DB --> B4
+    B3 -- consume via DB --> B4
+    A1 -- consume via API (FM ID) --> C2
+    A2 -- consume via API (FM ID) --> C2
+    A3 -- consume via API (FM ID) --> C2
 ```
