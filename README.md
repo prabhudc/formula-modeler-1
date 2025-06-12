@@ -77,10 +77,10 @@ flowchart TD
 
     %% Wide HANA Cloud layer
     subgraph HC["HANA Cloud (Curated Models & FM DB Objects)"]
+        B4[FM DB objects]
         B1[Sales HANA Models]
         B2[Finance HANA Models]
         B3[Pricing HANA Models]
-        B4[FM DB objects]
     end
 
     %% Connections
