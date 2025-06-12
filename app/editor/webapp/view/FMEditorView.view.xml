@@ -120,11 +120,18 @@
                                 <Button text="(" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
                                 <Button text=")" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
                             </HBox>
+                            <HBox id="functionsButtonsContainer" class="sapUiSmallMarginBottom" wrap="Wrap">
+                                <Button text="avg" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="min" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="max" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="sum" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="count" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                            </HBox>
                         </VBox>
                         <!-- Second column: 65% width, code editor -->
                         <VBox width="65%">
                             <Toolbar>
-                                <core:Icon src="sap-icon://calculator" decorative="false" tooltip="Formula Editor" class="sapUiTinyMarginEnd"/>
+                                <core:Icon src="sap-icon://simulate" decorative="false" tooltip="Formula Editor" class="sapUiTinyMarginEnd"/>
                                 <Title text="Formula Editor"/>
                                 <ToolbarSpacer/>
                             </Toolbar>

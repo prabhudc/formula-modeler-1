@@ -58,8 +58,14 @@ BEGIN
                   rnode_part = '"'||:rnode_part||'"';
                }
          }
-         -- Concatenate the left and right branches and save into temporary attribute
-         v.temp_formula_part =  '('||:lnode_part||:v.node_operator||:rnode_part||')';
+         
+         if ( count(:o_redge) != to_bigint(0) ) {
+         	-- Concatenate the left and right branches and save into temporary attribute
+        	   v.temp_formula_part =  '('||:lnode_part||:v.node_operator||:rnode_part||')';
+         }else {
+         	-- Aggegation functions
+         	v.temp_formula_part =  :v.node_operator || '(' || :lnode_part || ')';
+         }
 
          formula_part = :v.temp_formula_part;
       }

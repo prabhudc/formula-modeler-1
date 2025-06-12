@@ -420,6 +420,11 @@ sap.ui.define([
         onReturnToLanding: function () {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("landing");
+            // Refresh the model to ensure the landing page table is updated
+            var oModel = this.getView().getModel();
+            if (oModel && typeof oModel.refresh === "function") {
+                oModel.refresh();
+            }
         },
         onOperatorButtonPress: function(oEvent) {
             var sOperator = oEvent.getSource().getText();
