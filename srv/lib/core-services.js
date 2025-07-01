@@ -168,8 +168,6 @@ module.exports = {
       // Go over the AST and assign UUIDs to each node
       // will be used as ID for Nodes entity
 
-      const symbolNodeSkipArray = DEFAULTS.supportedAggregationFunctions; 
-
       ast.traverse(function(node,path,parent) {
         if (node.type === 'OperatorNode' || node.type === 'ConstantNode' || node.type === 'SymbolNode' || node.type === 'FunctionNode') {
           node.ID = cds.utils.uuid();
@@ -178,32 +176,19 @@ module.exports = {
         }
       });
 
-    // These are free-dimensions to execute a formula
-    // They will stored as parameters of the root node
+      // Fill other root node parameters
+      const additionalParams = [];
       if (Array.isArray(keyAttributeList)) {
         keyAttributeList.forEach(attr => {
-          // Validate parameter_name
-          if (!DEFAULTS.ALLOWED_PARAMETER_NAMES.includes(attr.parameter_name)) {
-        throw new Error(`Invalid parameter_name: ${attr.parameter_name}`);
+          if (attr.parameter_value !== undefined && attr.parameter_value !== null && attr.parameter_value !== '') {
+            additionalParams.push(
+              {
+                parameter_type: "formula_dimension",
+                parameter_name: "key",
+                parameter_value: attr.parameter_value
+              }
+            );
           }
-          // Validate parameter_type
-          if (!DEFAULTS.ALLOWED_PARAMETER_TYPES.includes(attr.parameter_type)) {
-        throw new Error(`Invalid parameter_type: ${attr.parameter_type}`);
-          }
-          // Validate parameter_value
-          if (attr.parameter_value === undefined || attr.parameter_value === null || attr.parameter_value === '') {
-            throw new Error(`parameter_value for parameter_name ${attr.parameter_name} cannot be empty`);
-          }
-            if (
-            attr.parameter_type === "formula_dimension" &&
-            attr.parameter_name === "key"
-            ) {
-            keyAttributeList.push({
-              parameter_name: attr.parameter_name,
-              parameter_type: attr.parameter_type,
-              parameter_value: attr.parameter_value
-            });
-            }
         });
       }
 
@@ -221,7 +206,7 @@ module.exports = {
               node_operand: '',
               node_formula: nodeFormula,
               formula_ID: formulaID,
-              Parameters : keyAttributeList
+              Parameters : additionalParams 
             });
     
       const parentNodeIDSet = new Set();// To track left-hand side parent already visited
@@ -253,7 +238,8 @@ module.exports = {
               node_operator: node.op,
               node_operand: '',
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: []
             });
 
             edgeArray.push({
@@ -275,7 +261,8 @@ module.exports = {
               node_operator: '',
               node_operand: node.value,
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: []
             });
 
             edgeArray.push({
@@ -289,7 +276,8 @@ module.exports = {
             break
           case 'SymbolNode':
           // Skip certain symbol nodes  
-          if (symbolNodeSkipArray.includes(node.name.toLowerCase())) break; 
+          if (DEFAULTS.supportedAggregationFunctions.includes(node.name.toLowerCase())) break; 
+          if (DEFAULTS.supportedMiscelaneousFunctions.includes(node.name.toLowerCase())) break;
              
             nodeArray.push({
               ID: node.ID,
@@ -300,7 +288,8 @@ module.exports = {
               node_operator: '',
               node_operand: node.name,
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: []
             });
             edgeArray.push({
               ID: cds.utils.uuid(),
@@ -312,9 +301,33 @@ module.exports = {
 
             break
             case 'FunctionNode':
-            if (!symbolNodeSkipArray.includes(node.fn.toString().toLowerCase())){
+            if (!DEFAULTS.supportedAggregationFunctions.includes(node.fn.toString().toLowerCase()) &&
+                !DEFAULTS.supportedMiscelaneousFunctions.includes(node.fn.toString().toLowerCase())) {
               throw new Error(`Function ${node.fn} is not supported in the formula AST`);
             } 
+            // Handler "over" function
+            let parameterArray = [];
+            if(node.fn.toString().toLowerCase() === 'over') {
+              // Over function is a special case, if it does not have an edge
+              // Only support if the paramerts are direct columns and not derived columns
+              // Derived columns to be handled in the future
+              if (node.args && node.args.length > 0) {
+                node.args.forEach((arg) => {
+                  if (arg.type === 'SymbolNode' || arg.type === 'ConstantNode') {
+                    parameterArray.push({
+                      parameter_type: "formula_dimension",
+                      parameter_name: 'key',
+                      parameter_value: arg.name || arg.value
+                    });
+                  // Remove from node.args where element ==  arg.name || arg.value
+                  node.args = node.args.filter(a => a.name !== arg.name && a.value !== arg.value);
+                  } else {
+                    throw new Error(`over function with incompatible arguments: ${arg.type} for function ${node.fn}`);
+                  }
+                });
+              }
+            }
+
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,
@@ -324,7 +337,8 @@ module.exports = {
               node_operator: node.fn.toString().toLowerCase(),
               node_operand: '',
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: parameterArray
             });
             edgeArray.push({
               ID: cds.utils.uuid(),
