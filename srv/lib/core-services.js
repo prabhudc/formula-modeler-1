@@ -28,7 +28,6 @@ module.exports = {
     /**
      * Retrieves the target HANA mocdel for the specified formula ID.
      * @param {string} formulaID - The ID of the formula to look up.
-     * @type {Promise<{ model_ID: string } | undefined>}
      * @description Executes a SELECT query on the "FormulaModels" table to fetch the "modelID" where the "parent" matches the provided formulaID.
     */
    
@@ -58,6 +57,18 @@ module.exports = {
     }
     return resultTargetModel;
   }, 
+
+
+  // getKeyAttributesByFormulaId: async function (formulaID) {
+  //   /**
+  //    * Retrieves the key attributes for the specified formula ID.
+  //    * @param {string} formulaID - The ID of the formula to look up.
+  //    * @description Executes a SELECT query on the "Formulae" table to fetch the "keyAttributes" where the "ID" matches the provided formulaID.
+  //    * If no key attributes are found, it returns an empty array.
+  //    */
+  //   const keyAttributes = await SELECT.from("Formulae")
+
+
 
   getDataRetrievalProxyObject: async function (formulaID) {
   
@@ -151,6 +162,7 @@ module.exports = {
       const formulaID = req.data.ID; 
       const nodeArray = [];
       const edgeArray = [];
+      const keyAttributeList = req.data.Nodes[0].Parameters;
       // Initialize the root node ID
       const rootNodeID = cds.utils.uuid();
       // Go over the AST and assign UUIDs to each node
@@ -165,8 +177,40 @@ module.exports = {
           node.ID = parent ? parent.ID:rootNodeID;
         }
       });
+
+    // These are free-dimensions to execute a formula
+    // They will stored as parameters of the root node
+      if (Array.isArray(keyAttributeList)) {
+        keyAttributeList.forEach(attr => {
+          // Validate parameter_name
+          if (!DEFAULTS.ALLOWED_PARAMETER_NAMES.includes(attr.parameter_name)) {
+        throw new Error(`Invalid parameter_name: ${attr.parameter_name}`);
+          }
+          // Validate parameter_type
+          if (!DEFAULTS.ALLOWED_PARAMETER_TYPES.includes(attr.parameter_type)) {
+        throw new Error(`Invalid parameter_type: ${attr.parameter_type}`);
+          }
+          // Validate parameter_value
+          if (attr.parameter_value === undefined || attr.parameter_value === null || attr.parameter_value === '') {
+            throw new Error(`parameter_value for parameter_name ${attr.parameter_name} cannot be empty`);
+          }
+            if (
+            attr.parameter_type === "formula_dimension" &&
+            attr.parameter_name === "key"
+            ) {
+            keyAttributeList.push({
+              parameter_name: attr.parameter_name,
+              parameter_type: attr.parameter_type,
+              parameter_value: attr.parameter_value
+            });
+            }
+        });
+      }
+
+      if(keyAttributeList.length === 0) {
+        throw new Error("Key attributes for the formula are required");
+      }
       
-      // Create the root node
       nodeArray.push({
               ID: rootNodeID,
               node_is_root: true,
@@ -176,7 +220,8 @@ module.exports = {
               node_operator: '',
               node_operand: '',
               node_formula: nodeFormula,
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters : keyAttributeList
             });
     
       const parentNodeIDSet = new Set();// To track left-hand side parent already visited
@@ -196,6 +241,9 @@ module.exports = {
 
         switch (node.type) {
           case 'OperatorNode':
+            // TODO : Aggregation key handling
+            // if (symbolNodeSkipArray.includes(node.op.toLowerCase())) {
+            // }
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,

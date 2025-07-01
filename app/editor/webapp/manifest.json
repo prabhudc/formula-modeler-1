@@ -120,6 +120,11 @@
           "pattern": "targetModels/{formulaId}",
           "name": "targetModels",
           "target": "targetModels"
+        },
+        {
+          "pattern": "maintenance/{formulaId}",
+          "name": "maintenance",
+          "target": "maintenance"
         }
       ],
       "targets": {
@@ -134,6 +139,10 @@
         "targetModels": {
           "viewName": "TargetModels",
           "viewLevel": 2
+        },
+        "maintenance": {
+          "viewName": "FMMaintenanceView",
+          "viewLevel": 1
         }
       }
     },

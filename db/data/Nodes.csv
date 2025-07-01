@@ -33,3 +33,14 @@ a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d,false,false,false,false,"*","","",b45c2d8e-
 7b6c5d4e-3f2a-1b0c-9d8e-7f6a5b4c3d2e,false,false,false,false,"/","","",b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e
 9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f,false,true,false,false,"","discount_percentage","",b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e
 d3e4f5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a,false,true,true,false,"","100","",b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e
+7e2a1b3c-4d5f-6a8b-9c0d-1e2f3a4b5c6d,true,false,false,false,"","","max_price_volume",2f1c4e8a-9b3d-4a7e-8c2f-1e3b5d6a7c8
+3a9e5b7c-2d1f-4c8a-9b0e-7f6d5c4b3a2e,false,false,false,false,"max","","",2f1c4e8a-9b3d-4a7e-8c2f-1e3b5d6a7c8
+5d8c2f1a-3b4e-7a9c-0d2f-6e1b3c5a7d8f,false,false,false,false,"*","","",2f1c4e8a-9b3d-4a7e-8c2f-1e3b5d6a7c8
+1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e,false,true,false,false,"","list_price","",2f1c4e8a-9b3d-4a7e-8c2f-1e3b5d6a7c8
+4e2f1b6a-7c8d-9e0f-1a2b-3c4d5e6f7a8b,false,true,false,false,"","volume","",2f1c4e8a-9b3d-4a7e-8c2f-1e3b5d6a7c8
+
+9f1c6a7b-5e3d-4f2c-8a6e-1b7c8d9e0f1,true,false,false,false,"","","max_avg_price_volume",3e8e7d5f-2a7c-4c1d-8c4a-0e6d2e3f4a5b
+a2b3c4d5-e6f7-4a89-8b7c-9d0e1f2a3b4,false,false,false,"*","","",3e8e7d5f-2a7c-4c1d-8c4a-0e6d2e3f4a5b
+c5d6e7f8-9a0b-4c1d-2e3f-4a5b6c7d8e9,false,false,false,false,"max","","",3e8e7d5f-2a7c-4c1d-8c4a-0e6d2e3f4a5b
+1e2f3a4b-5c6d-4e7f-8a9b-0c1d2e3f4a5,false,true,false,false,"","volume","",3e8e7d5f-2a7c-4c1d-8c4a-0e6d2e3f4a5b
+7f8e9d0c-1b2a-4c3d-5e6f-7a8b9c0d1e2,false,true,false,false,"","price","",3e8e7d5f-2a7c-4c1d-8c4a-0e6d2e3f4a5b

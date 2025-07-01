@@ -156,8 +156,8 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
 Content-Type: application/json
 
 {
-      "title": "f_test_25",
-      "description": "Formula 25",
+      "title": "f_test_40",
+      "description": "Formula 40",
       "formula": "max( volume )",
       "Models": [
         {
@@ -166,7 +166,24 @@ Content-Type: application/json
       ],
       "Nodes" : [
         {
-          "node_formula" : "f_test_25"
+          "node_formula" : "f_test_40",
+          "Parameters": [
+                {
+                  "parameter_name": "key",
+                  "parameter_type": "formula_dimension",
+                  "parameter_value": "product_id"
+                }
+              ]
           }
+          
       ]
     }
+//8c8ecb7c-8e7c-43da-a156-d0d9838cc6f3
+###
+
+GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormulaID?$top=100&$skip=200
+Content-Type: application/json
+
+{
+    "formulaID": "6887ea62-ed5d-4938-b556-638843eb13f9"
+}

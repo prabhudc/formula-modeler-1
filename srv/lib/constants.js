@@ -4,8 +4,9 @@
  */
 const DEFAULTS = {
     query_limit: process.env.QUERY_LIMIT || 10,
-    supportedAggregationFunctions : ['sum','max','min','avg','count','distinct']
-    
+    supportedAggregationFunctions : ['sum','max','min','avg','count','distinct'],
+    ALLOWED_PARAMETER_NAMES : ['key', 'aggregation'],
+    ALLOWED_PARAMETER_TYPES : ['formula_dimension']
 };
 
 module.exports = {

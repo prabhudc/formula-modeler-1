@@ -9,6 +9,7 @@ entity Formulae : cuid, managed {
     Nodes : Composition of many Nodes on Nodes.formula = $self;
     Edges : Composition of many Edges on Edges.formula = $self;
     Models : Composition of many FormulaModels on Models.parent = $self;
+    virtual KeyAttributes : array of  LargeString;
 }
 
 // Graph setup
@@ -21,6 +22,7 @@ entity Nodes  : cuid {
     node_operator : String(5) default '';
     node_operand : String(255) default '';
     node_formula : String(255) default '';
+    Parameters : Composition of many Parameters on Parameters.node = $self;
     formula : Association to Formulae;
 }
 
@@ -35,6 +37,15 @@ entity Edges : cuid {
 entity FormulaModels  {
     key parent : Association to Formulae;
     key model : Association to TargetModels; 
+}
+
+// Parameters applicable to a node
+entity Parameters : cuid {
+    key node : Association to Nodes;
+    parameter_name : String(255);
+    parameter_value : String(255);
+    parameter_type : String(255); 
+    is_parameter_enabled : Boolean default true;
 }
 
 @assert.unique: {unique_model_alias: [modelAlias]} 

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CVD_FORMULA_SELECTED_FIELDS" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CVD_FORMULA_SELECTED_FIELDS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="NODES">
+    <resourceUri>NODES</resourceUri>
+  </DataSource>
+  <DataSource id="FORMULAMODELS">
+    <resourceUri>FORMULAMODELS</resourceUri>
+  </DataSource>
+  <DataSource id="CVD_MODEL_FIELDS">
+    <resourceUri>CVD_MODEL_FIELDS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="nodes" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="NODE_IS_ROOT"/>
+      <viewAttribute id="NODE_IS_LEAF"/>
+      <viewAttribute id="NODE_OPERATOR"/>
+      <viewAttribute id="NODE_OPERAND"/>
+      <viewAttribute id="NODE_FORMULA"/>
+      <viewAttribute id="FORMULA_ID"/>
+      <viewAttribute id="NODE_IS_CONSTANT"/>
+      <viewAttribute id="NODE_IS_VARIABLE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="IS_SELECTED" datatype="TINYINT" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="NODES"/>
+    <filter>&quot;NODE_IS_CONSTANT&quot; = false and &quot;NODE_IS_VARIABLE&quot; = false and &quot;NODE_IS_LEAF&quot; = true</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="FORMULA_ID"/>
+      <viewAttribute id="MODEL_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="FORMULAMODELS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORMULA_ID" source="PARENT_ID"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="modelfields">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CVD_MODEL_FIELDS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="FORMULA_ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$MODEL_ID$ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORMULA_ID" source="FORMULA_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_ID$ID" source="MODEL_ID"/>
+    </input>
+    <input node="modelfields">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGETMODEL" source="TARGETMODEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_ID$ID" source="ID"/>
+    </input>
+    <joinAttribute name="JOIN$MODEL_ID$ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="lkup_fields" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="FORMULA_ID"/>
+      <viewAttribute id="TARGETMODEL"/>
+      <viewAttribute id="COLUMN_NAME"/>
+      <viewAttribute id="IS_SELECTED"/>
+      <viewAttribute hidden="true" id="JOIN$FORMULA_ID$FORMULA_ID"/>
+      <viewAttribute hidden="true" id="JOIN$COLUMN_NAME$NODE_OPERAND"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORMULA_ID" source="FORMULA_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGETMODEL" source="TARGETMODEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FORMULA_ID$FORMULA_ID" source="FORMULA_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COLUMN_NAME$NODE_OPERAND" source="COLUMN_NAME"/>
+    </input>
+    <input node="nodes">
+      <mapping xsi:type="Calculation:AttributeMapping" target="IS_SELECTED" source="IS_SELECTED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FORMULA_ID$FORMULA_ID" source="FORMULA_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COLUMN_NAME$NODE_OPERAND" source="NODE_OPERAND"/>
+    </input>
+    <joinAttribute name="JOIN$FORMULA_ID$FORMULA_ID"/>
+    <joinAttribute name="JOIN$COLUMN_NAME$NODE_OPERAND"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="lkup_fields">
+  <attributes>
+    <attribute id="FORMULA_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARENT_ID"/>
+      <keyMapping columnObjectName="lkup_fields" columnName="FORMULA_ID"/>
+    </attribute>
+    <attribute id="TARGETMODEL" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TARGETMODEL"/>
+      <keyMapping columnObjectName="lkup_fields" columnName="TARGETMODEL"/>
+    </attribute>
+    <attribute id="COLUMN_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLUMN_NAME"/>
+      <keyMapping columnObjectName="lkup_fields" columnName="COLUMN_NAME"/>
+    </attribute>
+    <attribute id="IS_SELECTED" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="IS_SELECTED"/>
+      <keyMapping columnObjectName="lkup_fields" columnName="IS_SELECTED"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="328" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="nodes" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="modelfields" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="156"/>
+    </shape>
+    <shape modelObjectName="modelfields" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="130"/>
+    </shape>
+    <shape expanded="true" modelObjectName="lkup_fields" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="lkup_fields" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="171"/>
+    </shape>
+    <shape modelObjectName="nodes" modelObjectNameSpace="lkup_fields" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="200"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
