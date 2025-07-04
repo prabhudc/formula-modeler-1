@@ -1,4 +1,5 @@
 const cds = require("@sap/cds");
+const { add } = require("@sap/cds/lib/srv/middlewares");
 const math = require("mathjs");
 const DEFAULTS = require("./constants").DEFAULTS;
 
@@ -169,6 +170,16 @@ module.exports = {
       // will be used as ID for Nodes entity
 
       ast.traverse(function(node,path,parent) {
+        // if node type is OperatorNode and node.op is '*' one of its immediate args has a function node and it has the name property as over, skip this node
+        // if (node.type === 'OperatorNode' && node.op === '*' && node.args && node.args.length > 0) {
+        //   let skipFlag = 0;
+        //   node.args.forEach((arg) => {
+        //     if (arg.type === 'FunctionNode' && arg.fn.name === 'over') {
+        //       skipFlag = 1;
+        //     }
+        //   });
+        //   if (skipFlag === 1) return;
+        // }
         if (node.type === 'OperatorNode' || node.type === 'ConstantNode' || node.type === 'SymbolNode' || node.type === 'FunctionNode') {
           node.ID = cds.utils.uuid();
         } else {
@@ -176,8 +187,9 @@ module.exports = {
         }
       });
 
-      // Fill other root node parameters
-      const additionalParams = [];
+      
+      let additionalParams = [];
+
       if (Array.isArray(keyAttributeList)) {
         keyAttributeList.forEach(attr => {
           if (attr.parameter_value !== undefined && attr.parameter_value !== null && attr.parameter_value !== '') {
@@ -215,6 +227,8 @@ module.exports = {
       // Helper to determine the edge location
       // 'n' = first edge, 'l' = lhs, 'r' = rhs
       ast.traverse(function (node, path, parent) {
+        let additionalParams = [];
+
         if (edgeArray.length === 0) {
           edgeLocation = 'n';
         } else if (parent && parentNodeIDSet.has(parent.ID) && parent.type !== 'FunctionNode') {
@@ -226,9 +240,11 @@ module.exports = {
 
         switch (node.type) {
           case 'OperatorNode':
-            // TODO : Aggregation key handling
-            // if (symbolNodeSkipArray.includes(node.op.toLowerCase())) {
-            // }
+          
+          if (parent && parent.type === 'FunctionNode' && DEFAULTS.supportedWindowFunctions.includes(parent.fn.name.toString().toLowerCase())) {
+            throw new Error(`Nesting of window functions with other functions not supported : ${node.op} in function ${parent.fn.name}`);
+          }
+
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,
@@ -277,8 +293,27 @@ module.exports = {
           case 'SymbolNode':
           // Skip certain symbol nodes  
           if (DEFAULTS.supportedAggregationFunctions.includes(node.name.toLowerCase())) break; 
-          if (DEFAULTS.supportedMiscelaneousFunctions.includes(node.name.toLowerCase())) break;
-             
+          if (DEFAULTS.supportedWindowFunctions.includes(node.name.toLowerCase())) break;
+
+          if (parent && parent.type === 'FunctionNode' && DEFAULTS.supportedWindowFunctions.includes(parent.fn.name.toString().toLowerCase())) {
+
+            const siblingEdges = edgeArray.filter(edge => edge.start_ID === parent.ID);
+            if (siblingEdges.length > 0) {
+              // Get object from nodeArray where id = edge.end_ID
+              const siblingNode = nodeArray.find(n => n.ID === siblingEdges[0].end_ID);
+              if (siblingNode) {
+                siblingNode.Parameters.push(
+                  {
+                    parameter_type: "formula_dimension",
+                    parameter_name: "window",
+                    parameter_value: node.name
+                  }
+                );
+              }     
+              break; 
+            }
+          }
+
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,
@@ -289,7 +324,7 @@ module.exports = {
               node_operand: node.name,
               node_formula: '',
               formula_ID: formulaID,
-              Parameters: []
+              Parameters: additionalParams
             });
             edgeArray.push({
               ID: cds.utils.uuid(),
@@ -302,31 +337,11 @@ module.exports = {
             break
             case 'FunctionNode':
             if (!DEFAULTS.supportedAggregationFunctions.includes(node.fn.toString().toLowerCase()) &&
-                !DEFAULTS.supportedMiscelaneousFunctions.includes(node.fn.toString().toLowerCase())) {
+                !DEFAULTS.supportedWindowFunctions.includes(node.fn.toString().toLowerCase())) {
               throw new Error(`Function ${node.fn} is not supported in the formula AST`);
             } 
             // Handler "over" function
             let parameterArray = [];
-            if(node.fn.toString().toLowerCase() === 'over') {
-              // Over function is a special case, if it does not have an edge
-              // Only support if the paramerts are direct columns and not derived columns
-              // Derived columns to be handled in the future
-              if (node.args && node.args.length > 0) {
-                node.args.forEach((arg) => {
-                  if (arg.type === 'SymbolNode' || arg.type === 'ConstantNode') {
-                    parameterArray.push({
-                      parameter_type: "formula_dimension",
-                      parameter_name: 'key',
-                      parameter_value: arg.name || arg.value
-                    });
-                  // Remove from node.args where element ==  arg.name || arg.value
-                  node.args = node.args.filter(a => a.name !== arg.name && a.value !== arg.value);
-                  } else {
-                    throw new Error(`over function with incompatible arguments: ${arg.type} for function ${node.fn}`);
-                  }
-                });
-              }
-            }
 
             nodeArray.push({
               ID: node.ID,

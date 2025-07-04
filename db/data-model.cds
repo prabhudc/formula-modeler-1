@@ -19,7 +19,7 @@ entity Nodes  : cuid {
     node_is_leaf : Boolean default false;
     node_is_constant : Boolean default false;
     node_is_variable : Boolean default false;
-    node_operator : String(5) default '';
+    node_operator : String(10) default '';
     node_operand : String(255) default '';
     node_formula : String(255) default '';
     Parameters : Composition of many Parameters on Parameters.node = $self;
