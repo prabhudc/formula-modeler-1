@@ -41,7 +41,7 @@ entity FormulaModels  {
 
 // Parameters applicable to a node
 entity Parameters : cuid {
-    key node : Association to Nodes;
+    node : Association to Nodes;
     parameter_name : String(255);
     parameter_value : String(255);
     parameter_type : String(255); 

@@ -21,8 +21,8 @@ module.exports = cds.service.impl(async function () {
          * for data retrieval and updates the proxy DB object name in the formulae entity.
          */
         const formulaID = req.data.formulaID;
-        const keyAttributeList = req.data.KeyAttributes;
-        const db = await cds.connect.to('db'); 
+        const keyAttributeList = req.data.params.keys;
+        // const db = await cds.connect.to('db'); 
         
         // Input param checks
         if (!formulaID) 

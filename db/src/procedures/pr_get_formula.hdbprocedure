@@ -11,10 +11,14 @@ BEGIN
    *************************************/
    graph g = Graph("G_WS_FORMULAE")
              with temporary attributes(vertex nvarchar temp_formula_part);
+   graph g_params = Graph("G_WS_PARAMETERS")
+             with temporary attributes(vertex nvarchar temp_formula_part);
    nvarchar(4096) formula_part = '';
    nvarchar(255)  lnode_part = '';
    nvarchar(255)  rnode_part = '';
-   nvarchar(36)   root_node_id = '';	
+   nvarchar(36)   root_node_id = '';
+   nvarchar(4096) param_part = '';
+   boolean        is_first  = true;
    
    --Get the root node from the formula ID
    foreach   v in Vertices(:g){
@@ -35,7 +39,7 @@ BEGIN
    traverse dfs :g from :root_node
    on exit vertex(vertex v){
 
-      if ( :v.node_is_root == false and :v.node_is_leaf == false ){
+      if ( :v.node_is_root == false and :v.node_is_leaf == false  ) {
          -- Look at the left-branch
          Multiset<Edge> o_ledge = e in out_edges(:v) where  :e.edge_location == 'l';
          foreach e in  :o_ledge {
@@ -52,21 +56,59 @@ BEGIN
          foreach e in  :o_redge {
                Vertex o_rnode  = TARGET(:e);
                rnode_part = :o_rnode.temp_formula_part;
-               if (:o_rnode.node_is_leaf == true and :o_rnode.node_is_constant != true ){
+               if (:o_rnode.node_is_leaf == true and :o_rnode.node_is_constant != true  ){
                   -- If the right node is a leaf and it is a column attribute 
                   -- enclose in double quotes
                   rnode_part = '"'||:rnode_part||'"';
                }
          }
-         
-         if ( count(:o_redge) != to_bigint(0) ) {
-         	-- Concatenate the left and right branches and save into temporary attribute
-        	   v.temp_formula_part =  '('||:lnode_part||:v.node_operator||:rnode_part||')';
-         }else {
-         	-- Aggegation functions
-         	v.temp_formula_part =  :v.node_operator || '(' || :lnode_part || ')';
-         }
 
+         
+         -- if(:v.node_operator != '()' ){
+            if ( count(:o_redge) != to_bigint(0) ) {
+               -- if(:v.node_operator != '()' ){
+                  -- Concatenate the left and right branches and save into temporary attribute
+               v.temp_formula_part =  '('||:lnode_part||:v.node_operator||:rnode_part||')';
+               -- }
+               
+            }else {
+               if(:v.node_operator == '-' or :v.node_operator == '+') {
+                  -- Unary operators
+                  v.temp_formula_part =  :v.node_operator||:lnode_part;
+               }
+               else{
+
+               -- Normal Aggregation operators
+               v.temp_formula_part =  :v.node_operator || '(' || :lnode_part || ')';   
+               -- if it is a window function, we need to handle it differently
+               param_part = '';
+               is_first = true;
+               -- To read the parameters
+               o_ledge = e in out_edges(:v) where  :e.edge_location == 'l';
+               foreach e in  :o_ledge {
+                  Vertex o_lnode  = TARGET(:e);
+
+                  foreach v_param_node in Vertices(:g_params){
+                     if (:v_param_node.node_id == :o_lnode.id and :v_param_node.parameter_type == 'window' and :v_param_node."PARAMETER_NAME" == 'partition_key') { 
+                        if( :is_first == true ){
+                           -- If it is the first parameter, do not add a comma , just the parameters
+                           param_part = '"'|| :v_param_node.parameter_value ||'"';
+                           is_first = false;
+                        }else {
+                           -- If it is not the first parameter, prefix a comma
+                           -- concatenate all parameter_value separated by commas
+                           param_part = :param_part ||', "'|| :v_param_node.parameter_value ||'"';
+                        }
+                     }
+                  }
+               }  -- If we have parameters, we need to add them to the formula
+                  -- Wrap them in OVER keyword
+                  if ( :param_part != '' ) {
+                     v.temp_formula_part = :v.temp_formula_part || ' OVER (PARTITION BY ' || :param_part || ')';
+                  }
+               }
+            }
+         -- }
          formula_part = :v.temp_formula_part;
       }
       

@@ -88,9 +88,9 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
 Content-Type: application/json
 
 {
-      "title": "Actual Price 3",
-      "description": "Actual Price Calculation 3",
-      "formula": "\"discount_percentage\"*100+\"list_price\"*\"volume\"",
+      "title": "Actual Price 4",
+      "description": "Actual Price Calculation 4",
+      "formula": "\"discount_percentage\"*100+\"list_price\"*-1*\"volume\"",
       "Models": [
         {
           "model_ID": "6a3e9f1b-2d8c-4a7d-9f3e-12c4d5e6f7a8"
@@ -98,7 +98,11 @@ Content-Type: application/json
       ],
       "Nodes" : [
         {
-          "node_formula" : "Price test calculation"
+          "node_formula" : "f_test_actual_price_4",
+          "Parameters": [
+               {"parameter_value" : "product_id"},
+               {"parameter_value" : "category"}
+              ]
           }
       ]
     }
@@ -110,9 +114,9 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModel
 Content-Type: application/json
 
 {
-    "formulaID": "95f471b7-8345-4119-91a9-c9d790397552",
+    "formulaID": "7120a4be-2360-4b7c-a938-704089865f9a",
     "params" : {
-        "keys": ["product_id"],
+        "keys": ["product_id","category"],
         "filters" : []
     }
 }
@@ -122,12 +126,12 @@ GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormu
 Content-Type: application/json
 
 {
-    "formulaID": "95f471b7-8345-4119-91a9-c9d790397552"
+    "formulaID": "7120a4be-2360-4b7c-a938-704089865f9a"
 }
 
 
 ###
-DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('ed5fdf71-2b1c-4349-9a49-42bba2433ef7')
+DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('2089085e-15b1-4030-bcef-81842f31dd02')
 
 
 ###
@@ -135,7 +139,7 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/previewFormulaData
 Content-Type: application/json
 
 {
-    "formulaID": "2de85b35-37f0-4989-b20d-ff9722a736c4"
+    "formulaID": "7074f4f1-c0da-4c6a-8b94-0a71a369b64e"
 }
 ###
 
@@ -144,9 +148,9 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModel
 Content-Type: application/json
 
 {
-    "formulaID": "04db2f8a-bc83-4762-a97e-3375c6aa77df",
+    "formulaID": "c089e937-0eae-4d0b-9b01-d94eb55dc7dc",
     "params" : {
-        "keys": ["category"],
+        "keys": ["ID"],
         "filters" : []
     }
 }
@@ -156,8 +160,8 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
 Content-Type: application/json
 
 {
-      "title": "f_test_window_function_1",
-      "description": "Window function test",
+      "title": "f_test_window_function_3",
+      "description": "Window function test 3",
       "formula": "windowMax(list_price,product_id,category)*list_price",
       "Models": [
         {
@@ -166,7 +170,7 @@ Content-Type: application/json
       ],
       "Nodes" : [
         {
-          "node_formula" : "f_test_window",
+          "node_formula" : "f_test_window_3",
           "Parameters": [
                {"parameter_value" : "product_id"},
                {"parameter_value" : "category"}
@@ -187,4 +191,44 @@ Content-Type: application/json
 
 ###
 ###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
+
+{
+      "title": "f_test_6",
+      "description": "Test 6",
+      "formula": "sum(REVENUE1*(COST1+COST2))",
+      "Models": [
+        {
+          "model_ID": "9f1d4c3e-7a2b-4d6e-8c1f-3b2a7d9e6f5c"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "f_test_6",
+          "Parameters": [
+               {"parameter_value" : "ID"}
+              ]
+          }
+          
+      ]
+    }
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModelbyFormulaID
+Content-Type: application/json
+
+{
+    "formulaID": "7074f4f1-c0da-4c6a-8b94-0a71a369b64e",
+    "params" : {
+        "keys": ["product_id","category"],
+        "filters" : []
+    }
+}
+
+###
+DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('675c3eac-0276-44e1-a525-a47f2fc4a38b')
+
+
+
+
 
