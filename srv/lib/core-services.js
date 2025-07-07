@@ -28,7 +28,6 @@ module.exports = {
     /**
      * Retrieves the target HANA mocdel for the specified formula ID.
      * @param {string} formulaID - The ID of the formula to look up.
-     * @type {Promise<{ model_ID: string } | undefined>}
      * @description Executes a SELECT query on the "FormulaModels" table to fetch the "modelID" where the "parent" matches the provided formulaID.
     */
    
@@ -58,6 +57,18 @@ module.exports = {
     }
     return resultTargetModel;
   }, 
+
+
+  // getKeyAttributesByFormulaId: async function (formulaID) {
+  //   /**
+  //    * Retrieves the key attributes for the specified formula ID.
+  //    * @param {string} formulaID - The ID of the formula to look up.
+  //    * @description Executes a SELECT query on the "Formulae" table to fetch the "keyAttributes" where the "ID" matches the provided formulaID.
+  //    * If no key attributes are found, it returns an empty array.
+  //    */
+  //   const keyAttributes = await SELECT.from("Formulae")
+
+
 
   getDataRetrievalProxyObject: async function (formulaID) {
   
@@ -151,12 +162,11 @@ module.exports = {
       const formulaID = req.data.ID; 
       const nodeArray = [];
       const edgeArray = [];
+      const keyAttributeList = req.data.Nodes[0].Parameters;
       // Initialize the root node ID
       const rootNodeID = cds.utils.uuid();
       // Go over the AST and assign UUIDs to each node
       // will be used as ID for Nodes entity
-
-      const symbolNodeSkipArray = DEFAULTS.supportedAggregationFunctions; 
 
       ast.traverse(function(node,path,parent) {
         if (node.type === 'OperatorNode' || node.type === 'ConstantNode' || node.type === 'SymbolNode' || node.type === 'FunctionNode') {
@@ -165,8 +175,27 @@ module.exports = {
           node.ID = parent ? parent.ID:rootNodeID;
         }
       });
+
+      // Fill other root node parameters
+      const additionalParams = [];
+      if (Array.isArray(keyAttributeList)) {
+        keyAttributeList.forEach(attr => {
+          if (attr.parameter_value !== undefined && attr.parameter_value !== null && attr.parameter_value !== '') {
+            additionalParams.push(
+              {
+                parameter_type: "formula_dimension",
+                parameter_name: "key",
+                parameter_value: attr.parameter_value
+              }
+            );
+          }
+        });
+      }
+
+      if(keyAttributeList.length === 0) {
+        throw new Error("Key attributes for the formula are required");
+      }
       
-      // Create the root node
       nodeArray.push({
               ID: rootNodeID,
               node_is_root: true,
@@ -176,7 +205,8 @@ module.exports = {
               node_operator: '',
               node_operand: '',
               node_formula: nodeFormula,
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters : additionalParams 
             });
     
       const parentNodeIDSet = new Set();// To track left-hand side parent already visited
@@ -196,6 +226,9 @@ module.exports = {
 
         switch (node.type) {
           case 'OperatorNode':
+            // TODO : Aggregation key handling
+            // if (symbolNodeSkipArray.includes(node.op.toLowerCase())) {
+            // }
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,
@@ -205,7 +238,8 @@ module.exports = {
               node_operator: node.op,
               node_operand: '',
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: []
             });
 
             edgeArray.push({
@@ -227,7 +261,8 @@ module.exports = {
               node_operator: '',
               node_operand: node.value,
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: []
             });
 
             edgeArray.push({
@@ -241,7 +276,8 @@ module.exports = {
             break
           case 'SymbolNode':
           // Skip certain symbol nodes  
-          if (symbolNodeSkipArray.includes(node.name.toLowerCase())) break; 
+          if (DEFAULTS.supportedAggregationFunctions.includes(node.name.toLowerCase())) break; 
+          if (DEFAULTS.supportedMiscelaneousFunctions.includes(node.name.toLowerCase())) break;
              
             nodeArray.push({
               ID: node.ID,
@@ -252,7 +288,8 @@ module.exports = {
               node_operator: '',
               node_operand: node.name,
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: []
             });
             edgeArray.push({
               ID: cds.utils.uuid(),
@@ -264,9 +301,33 @@ module.exports = {
 
             break
             case 'FunctionNode':
-            if (!symbolNodeSkipArray.includes(node.fn.toString().toLowerCase())){
+            if (!DEFAULTS.supportedAggregationFunctions.includes(node.fn.toString().toLowerCase()) &&
+                !DEFAULTS.supportedMiscelaneousFunctions.includes(node.fn.toString().toLowerCase())) {
               throw new Error(`Function ${node.fn} is not supported in the formula AST`);
             } 
+            // Handler "over" function
+            let parameterArray = [];
+            if(node.fn.toString().toLowerCase() === 'over') {
+              // Over function is a special case, if it does not have an edge
+              // Only support if the paramerts are direct columns and not derived columns
+              // Derived columns to be handled in the future
+              if (node.args && node.args.length > 0) {
+                node.args.forEach((arg) => {
+                  if (arg.type === 'SymbolNode' || arg.type === 'ConstantNode') {
+                    parameterArray.push({
+                      parameter_type: "formula_dimension",
+                      parameter_name: 'key',
+                      parameter_value: arg.name || arg.value
+                    });
+                  // Remove from node.args where element ==  arg.name || arg.value
+                  node.args = node.args.filter(a => a.name !== arg.name && a.value !== arg.value);
+                  } else {
+                    throw new Error(`over function with incompatible arguments: ${arg.type} for function ${node.fn}`);
+                  }
+                });
+              }
+            }
+
             nodeArray.push({
               ID: node.ID,
               node_is_root: false,
@@ -276,7 +337,8 @@ module.exports = {
               node_operator: node.fn.toString().toLowerCase(),
               node_operand: '',
               node_formula: '',
-              formula_ID: formulaID
+              formula_ID: formulaID,
+              Parameters: parameterArray
             });
             edgeArray.push({
               ID: cds.utils.uuid(),

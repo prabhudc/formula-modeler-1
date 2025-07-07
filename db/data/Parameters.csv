@@ -1,0 +1,13 @@
+node_ID,ID,parameter_name,parameter_value,parameter_type,is_parameter_enabled
+f47ac10b-58cc-4372-a567-0e02b2c3d479,4c5d6e7f-8a9b-0c1d-2e3f-4a5b6c7d8e9f,"key","ID","formula_dimension",true
+f47ac10b-58cc-4372-a567-0e02b2c3d479,5e6f7a8b-9c0d-1b2a-3c4d-5e6f7a8b9c0d,"key","ID","formula_dimension",true
+b9060ebc-dd59-4edf-8da3-32f63d67092b,1e8f7a6b-5c4d-3b2a-9c0d-8e7f6a5b4c3d,"key","ID","formula_dimension",true
+b9060ebc-dd59-4edf-8da3-32f63d67092b,2a3b4c5d-6e7f-8a9b-0c1d-2e3f4d5c6b7a,"key","STORE_ID","formula_dimension",true
+b9060ebc-dd59-4edf-8da3-32f63d67092b,3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f,"key","CUSTOMER_ID","formula_dimension",true
+9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4,4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a,"key","product","formula_dimension",true
+9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4,5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b,"key","category","formula_dimension",true
+7e2a1b3c-4d5f-6a8b-9c0d-1e2f3a4b5c6,7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d,"key","product","formula_dimension",true
+7e2a1b3c-4d5f-6a8b-9c0d-1e2f3a4b5c6,2d3c4b5a-6f7e-8d9c-0b1a-2e3f4d5c6b7a,"key","category","formula_dimension",true
+9f1c6a7b-5e3d-4f2c-8a6e-1b7c8d9e0f1,b8c9d0e1-2f3a-4b5c-6d7e-8f9a0b1c2d,"key","product","formula_dimension",true
+9f1c6a7b-5e3d-4f2c-8a6e-1b7c8d9e0f1,3f4a5b6c-7d8e-4f9a-0b1c-2d3e4f5a6b7,"key","category","formula_dimension",true
+c5d6e7f8-9a0b-4c1d-2e3f-4a5b6c7d8e,c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5,"over","category","aggregation",true

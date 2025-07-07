@@ -53,12 +53,11 @@ sap.ui.define([
             });
         },
         onFormulaPress: function(oEvent) {
-            if (this._editMode) return; // Disable navigation in edit mode
             var oItem = oEvent.getSource();
             var oCtx = oItem.getBindingContext();
             var formulaId = oCtx.getProperty("ID");
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            oRouter.navTo("targetModels", { formulaId: formulaId });
+            oRouter.navTo("maintenance", { formulaId: formulaId });
         },
         onCopyFormulaId: function(oEvent) {
             var oItem = oEvent.getSource().getParent();

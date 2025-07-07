@@ -127,7 +127,7 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('0f794ee4-f0cb-4b7f-8e76-96626f8c2dd8')
+DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('6bec1c24-bf39-40f0-a84a-ec6cecf34e43')
 
 
 ###
@@ -156,9 +156,9 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
 Content-Type: application/json
 
 {
-      "title": "f_test_25",
-      "description": "Formula 25",
-      "formula": "max( volume )",
+      "title": "f_test_41",
+      "description": "Formula 41",
+      "formula": "max(price over (product_code,category,item_id))*price",
       "Models": [
         {
           "model_ID": "6a3e9f1b-2d8c-4a7d-9f3e-12c4d5e6f7a8"
@@ -166,7 +166,23 @@ Content-Type: application/json
       ],
       "Nodes" : [
         {
-          "node_formula" : "f_test_25"
+          "node_formula" : "f_test_41",
+          "Parameters": [
+               {"parameter_value" : "product_code"},
+               {"parameter_value" : "category"},
+               {"parameter_value" : "item_id"},
+               {"parameter_value" : "product_id"}
+              ]
           }
+          
       ]
     }
+//8c8ecb7c-8e7c-43da-a156-d0d9838cc6f3
+###
+
+GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormulaID?$top=100&$skip=200
+Content-Type: application/json
+
+{
+    "formulaID": "6bec1c24-bf39-40f0-a84a-ec6cecf34e43"
+}

@@ -61,7 +61,6 @@
                     id="formulaDetailsStep"
                     title="Build Formula"
                     validated="false">
-                    <!-- Header fields and Key Fields side by side -->
                     <HBox width="100%">
                         <!-- Formula Name and Description -->
                         <VBox id="formulaHeaderFields" width="35%">

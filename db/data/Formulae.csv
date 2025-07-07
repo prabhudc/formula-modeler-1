@@ -3,3 +3,5 @@ e7eb96e2-df1b-4329-b8f8-e0b93dd460e0,"Medium Complexity","A medium complexity fo
 3c2f1a6e-5b9f-4e3e-9c3f-2e3a8b5b9f4a,"Complex Margin","A complex calculation formula","(TARGET_MARGIN-((1-((COST1+COST2)/(REVENUE1+REVENUE2)))*100))",true,2025-04-22T12:00:00Z,admin,2025-04-22T12:00:00Z,admin
 5f9a3d2c-1b4e-7c8f-9e6a-2b3f4d1a5c7e,"Simple Addition","A formula with simple addition","GROSS_PRICE + DISCOUNT",true,2025-04-23T12:00:00Z,admin,2025-04-23T12:00:00Z,admin
 b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e,"Net Price Determination","Calculate net price of products","((list_price-list_price(discount_percentage/100))volume)",true,2025-05-19T12:00:00Z,admin,2025-05-19T12:00:00Z,admin
+2f1c4e8a-9b3d-4a7e-8c2f-1e3b5d6a7c8f,"Simple aggregation","Calculate max price-volume","max(list_price*volume)",true,2025-07-01T12:00:00Z,admin,2025-07-01T12:00:00Z,admin
+3e8e7d5f-2a7c-4c1d-8c4a-0e6d2e3f4a5b,"Simple window aggregation","Max price volume","max(price over (category))*list_price",true,2025-07-01T12:00:00Z,admin,2025-07-01T12:00:00Z,admin

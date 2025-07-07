@@ -21,7 +21,7 @@ module.exports = cds.service.impl(async function () {
          * for data retrieval and updates the proxy DB object name in the formulae entity.
          */
         const formulaID = req.data.formulaID;
-        const keyAttributeList = req.data.params.keys;
+        const keyAttributeList = req.data.KeyAttributes;
         const db = await cds.connect.to('db'); 
         
         // Input param checks
@@ -37,6 +37,8 @@ module.exports = cds.service.impl(async function () {
             const responseTargetModel = await coreservices.getTargetModelByFormulaId(formulaID);
             // Retrieve the proxy DB object name for the formula ID
             const dataRetrievalProxyObject = await coreservices.getDataRetrievalProxyObject(formulaID);
+            // Retrieve the key attributes for the formula ID
+            const keyAttributeList = await coreservices.getKeyAttributesByFormulaId(formulaID);
             // Get the SQL to create the proxy object
             const createDataRetrievalProxyObjectSQL = await coreservices.buildDataRetrievalProxyObject(responseFormula, responseTargetModel, keyAttributeList, dataRetrievalProxyObject);
             // Create the proxy object in the DB
@@ -116,6 +118,7 @@ module.exports = cds.service.impl(async function () {
         if (!formula) throw new Error("Formula is required");
         if (!Models || Models.length === 0) throw new Error("Target Models for the formula are required");
         if (!Nodes || Nodes.length === 0 || !Nodes[0].node_formula || Nodes[0].node_formula === '') throw new Error("Formula Name is required");
+        if (!Nodes[0].Parameters || Nodes[0].Parameters.length === 0) throw new Error("Key Attributes for the formula are required");
         try {
           const formulaID =   await coreservices.createFormulaEntryPayload(req);
           return {
