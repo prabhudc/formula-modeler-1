@@ -3,7 +3,9 @@ using FormulaModels as _formulamodels from '../db/data-model.cds';
 using TargetModels as _targetmodels from '../db/data-model.cds';
 using CVD_HANA_MODELS as _newModels  from '../db/data-model.cds';
 using CVD_MODEL_FIELDS as _modelFields from '../db/data-model.cds';
-using { cuid } from '@sap/cds/common';
+using Nodes as _nodes from '../db/data-model.cds';
+using Parameters as _parameters from '../db/data-model.cds';
+
 
 
 service FormulaModelerServices {
@@ -18,7 +20,11 @@ service FormulaModelerServices {
     entity NewModels as projection on _newModels;
     // Service to know the fields of the models
     entity ModelFields as projection on _modelFields;
-
+    // Nodes that for the vertices of the graph
+    entity Nodes as projection on _nodes;
+    // Parameters attached to each node
+    entity Parameters as projection on _parameters;
+    
     action buildFormulaOnModelbyFormulaID(formulaID : UUID,
                                  params : {
         keys    : array of String;
