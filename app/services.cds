@@ -1,2 +1,2 @@
 
-using from './manager/annotations';
+using from './editor/annotations';

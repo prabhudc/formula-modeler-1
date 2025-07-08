@@ -2,7 +2,7 @@
   "generator-ui5-project": {
     "namespaceUI5": "fm",
     "projectName": "fmui",
-    "uimoduleName": "fmmanager",
+    "uimoduleName": "fmeditor",
     "enableFPM": false,
     "platform": "SAP Build Work Zone, standard edition",
     "ui5Libs": "Local resources (SAPUI5)",
@@ -10,7 +10,7 @@
     "initRepo": false,
     "projectId": "fm.fmui",
     "uimodules": [
-      "fmmanager"
+      "fmeditor"
     ]
   },
   "generator-ui5-app": {

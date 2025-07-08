@@ -2,121 +2,181 @@ _schema-version: 3.3.0
 ID: formula-modeler-1
 description: Formula Modeler.
 version: 1.0.0
-modules:
-  - name: formula-modeler-1-srv
-    type: nodejs
-    path: gen/srv
-    requires:
-      - name: formula-modeler-1-db
-      - name: formula-modeler-1-auth
-    provides:
-      - name: formula-modeler-1-srv-api
-        properties:
-          srv-url: ${default-url}
-    parameters:
-      buildpack: nodejs_buildpack
-      instances: 1
-    build-parameters:
-      builder: npm-ci
-  - name: formula-modeler-1-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: formula-modeler-1-db
-      - name: fm-input-db
-        group: SERVICE_REPLACEMENTS
-        properties:
-          key: fm-input-db-hdi
-          service: ~{fm-input-db-hdi}
-      - name: base-db-sys
-        group: SERVICE_REPLACEMENTS
-        properties:
-          key: ups-base-db-sys-hdi
-          service: ~{ups-base-db-sys-hdi}
-    parameters:
-      buildpack: nodejs_buildpack
-  - name: formula-modeler-1-app-content
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: formula-modeler-1-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - artifacts:
-            - fmmanager.zip
-          name: fmmanager
-          target-path: resources/
-  - name: fmmanager
-    type: html5
-    path: app/manager
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms:
-        []
-resources:
-  - name: formula-modeler-1-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-  - name: fm-input-db
-    type: org.cloudfoundry.existing-service
-    parameters:
-      service-name: ups-fm-input
-    properties:
-      fm-input-db-hdi: ${service-name}
-  - name: base-db-sys
-    type: org.cloudfoundry.existing-service
-    parameters:
-      service-name: ups-base-db-sys
-    properties:
-      ups-base-db-sys-hdi: ${service-name}
-  - name: formula-modeler-1-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        tenant-mode: dedicated
-        xsappname: formula-modeler-1-${org}-${space}
-      path: ./xs-security.json
-      service: xsuaa
-      service-plan: application
-  - name: formula-modeler-1-repo-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-name: formula-modeler-1-html5-service
-      service-plan: app-host
-  - name: formula-modeler-1-destination-service
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        HTML5Runtime_enabled: false
-        init_data:
-          instance:
-            destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
-                ProxyType: Internet
-                Type: HTTP
-                URL: https://ui5.sap.com
-            existing_destinations_policy: update
-        version: 1.0.0
-      service: destination
-      service-name: formula-modeler-1-destination-service
-      service-plan: lite
-parameters:
-  deploy_mode: html5-repo
-  enable-parallel-deployments: true
+
 build-parameters:
   before-all:
     - builder: custom
       commands:
-        - npm ci
+        # - npm install --production
+        # - npx cds build --production
+        - npm ci 
         - npx cds build --production
+
+modules:
+- name: formula-modeler-1-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+    - name: formula-modeler-1-db
+    - name: formula-modeler-1-auth
+  provides:
+    - name: formula-modeler-1-srv-api
+      properties:
+        srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    disk-quota: 512M
+    instances: 1
+    memory: 256M
+  build-parameters:
+    builder: npm-ci
+    ignore:
+      - node_modules
+      - gen
+      - .git
+      - .vscode
+      - default-env.json
+      - .env
+
+- name: formula-modeler-1-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+    - name: formula-modeler-1-db
+    - name: fm-input-db
+      group: SERVICE_REPLACEMENTS
+      properties:
+        key: fm-input-db-hdi
+        service: ~{fm-input-db-hdi}
+    - name: base-db-sys
+      group: SERVICE_REPLACEMENTS
+      properties:
+        key: ups-base-db-sys-hdi
+        service: ~{ups-base-db-sys-hdi}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    ignore:
+      - default-*.json
+      - .env
+      - '*node_modules*'
+
+
+
+- name: formula-modeler-1-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: formula-modeler-1-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - fmeditor.zip
+      name: fmeditor
+      target-path: resources/
+
+
+- name: fmeditor
+  type: html5
+  path: app/editor
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+      - npm install
+      - npm run build:cf
+    supported-platforms:
+      []
+
+- name: formula-modeler-content-destination
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: formula-modeler-1-repo-host
+    parameters:
+      service-key:
+        name: formula-modeler-1-repo-host-key
+  - name: formula-modeler-1-auth
+    parameters:
+      service-key:
+        name: formula-modeler-1-auth-key
+  - name: formula-modeler-1-destination-service
+    parameters:
+      content-target: true
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: formula-modeler-1-html-repo-host-dest
+          ServiceInstanceName: formula-modeler-1-repo-host
+          ServiceKeyName: formula-modeler-1-repo-host-key
+          sap.cloud.service: com.foo.fmmodeler
+        - Authentication: OAuth2UserTokenExchange
+          Name: formula-modeler-1-auth-dest
+          ServiceInstanceName: formula-modeler-1-auth
+          ServiceKeyName: formula-modeler-1-auth-key
+          sap.cloud.service: com.foo.fmmodeler
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
+
+resources:
+- name: formula-modeler-1-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: fm-input-db
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: ups-fm-input
+  properties:
+    fm-input-db-hdi: ${service-name}
+- name: base-db-sys
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: ups-base-db-sys
+  properties:
+    ups-base-db-sys-hdi: ${service-name}
+- name: formula-modeler-1-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: formula-modeler-1-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: formula-modeler-1-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: formula-modeler-1-repo-host
+    service-plan: app-host
+- name: formula-modeler-1-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+            - Authentication: NoAuthentication
+              Name: ui5
+              ProxyType: Internet
+              Type: HTTP
+              URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: formula-modeler-1-destination-service
+    service-plan: lite
+
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+
+

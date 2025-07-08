@@ -5,7 +5,7 @@
 const DEFAULTS = {
     query_limit: process.env.QUERY_LIMIT || 10,
     supportedAggregationFunctions : ['sum','max','min','avg','count','distinct'],
-    supportedWindowFunctions : ['windowmax'],
+    supportedWindowFunctions : ['windowmax', 'windowmin', 'windowavg', 'windowcount', 'windowsum'],
     function_mapping : {
         'windowsum' : 'SUM',
         'windowmax' : 'MAX',

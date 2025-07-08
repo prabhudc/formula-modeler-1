@@ -10,9 +10,40 @@ sap.ui.define([
             this._formulaDescriptionValid = false;
             this._formulaCodeValid = false;
 
-            // Add this:
             var oUIModel = new sap.ui.model.json.JSONModel({});
             this.getView().setModel(oUIModel, "ui");
+        },
+
+        onBeforeRendering: function () {
+            this._resetView();
+        },
+
+        _resetView: function () {
+            var oView = this.getView();
+
+            // Reset formula name input
+            var oNameInput = oView.byId("formulaNameInput");
+            oNameInput.setValue("");
+            oNameInput.setValueState("None");
+
+            // Reset formula description input
+            var oDescInput = oView.byId("formulaDescriptionInput");
+            oDescInput.setValue("");
+            oDescInput.setValueState("None");
+
+            // Reset formula code editor
+            var oCodeEditor = oView.byId("formulaCodeEditor");
+            oCodeEditor.setValue("");
+
+            // Clear key fields and formula fields containers
+            var oKeyFieldsVBox = oView.byId("keyFieldsButtonsContainer");
+            var oFormulaFieldsVBox = oView.byId("formulaFieldsButtonsContainer");
+            oKeyFieldsVBox.removeAllItems();
+            oFormulaFieldsVBox.removeAllItems();
+
+            // Reset wizard steps
+            this._wizard.discardProgress(this.byId("selectModelsStep"));
+            this.byId("formulaDetailsStep").setValidated(false);
         },
 
         onTargetModelsSelectionChange: function (oEvent) {
@@ -293,9 +324,28 @@ sap.ui.define([
                 return { model_ID: oCtx.getProperty("ID") };
             });
 
+            // Get the Emphasized buttons from keyFieldsButtonsContainer
+
+            var oKeyFieldsHBox = oView.byId("keyFieldsButtonsContainer");
+            var aKeyButtons = oKeyFieldsHBox.getItems();
+            var aSelectedKeys = aKeyButtons
+                .filter(function(btn) {
+                    return btn.getType && btn.getType() === "Emphasized";
+                })
+                .map(function(btn) {
+                    return btn.getText();
+                });
+                    
+
+            
             // 6. Prepare Nodes array (node_formula is same as formula name)
             var aNodes = [
-                { node_formula: sFormulaName }
+                {
+                    node_formula: sFormulaName,
+                    Parameters: aSelectedKeys.map(function(key) {
+                        return { parameter_value: key };
+                    })
+                }
             ];
 
             // 7. Prepare payload

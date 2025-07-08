@@ -16,7 +16,7 @@
       "toolsId": "d331a5a1-6091-467c-a327-84d9821129d8"
     },
     "dataSources": {
-      "mainService": {
+      "FormulaModelerServices": {
         "uri": "/odata/v4/formula-modeler-services/",
         "type": "OData",
         "settings": {
@@ -76,8 +76,8 @@
           "bundleName": "fm.manager.i18n.i18n"
         }
       },
-      "": {
-        "dataSource": "mainService",
+      "FormulaModelerServices": {
+        "dataSource": "FormulaModelerServices",
         "preload": true,
         "settings": {
           "operationMode": "Server",

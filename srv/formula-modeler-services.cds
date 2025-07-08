@@ -9,7 +9,7 @@ using { cuid } from '@sap/cds/common';
 service FormulaModelerServices {
 
     // Maintain Formulae
-    entity Formulae      as projection on _formulae;
+    entity Formulae      as projection on _formulae order by modifiedAt desc;
     // Maintain FormulaModels
     entity FormulaModels as projection on _formulamodels;
     // Maintain TargetModels

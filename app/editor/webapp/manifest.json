@@ -16,7 +16,7 @@
       "toolsId": "d331a5a1-6091-467c-a327-84d9821129d8"
     },
     "dataSources": {
-      "mainService": {
+      "FormulaModelerServices": {
         "uri": "/odata/v4/formula-modeler-services/",
         "type": "OData",
         "settings": {
@@ -78,7 +78,8 @@
         }
       },
       "": {
-        "dataSource": "mainService",
+        "dataSource": "FormulaModelerServices",
+        "type": "sap.ui.model.odata.v4.ODataModel",
         "preload": true,
         "settings": {
           "operationMode": "Server",
@@ -140,7 +141,7 @@
           "viewName": "TargetModels",
           "viewLevel": 2
         },
-        "maintenance": {
+        "maintenance": { 
           "viewName": "FMMaintenanceView",
           "viewLevel": 1
         }
@@ -152,5 +153,9 @@
       "id": "App",
       "async": true
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "com.sposea.fmmodeler"
   }
 }
