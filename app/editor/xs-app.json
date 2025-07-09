@@ -18,7 +18,7 @@
       "source": "^/odata/v4/(.*)$",
       "target": "/odata/v4/$1",
       "service": "formula-modeler-1-srv-api",
-      "authenticationType": "xsuaa",
+      "authenticationType": "none",
       "csrfProtection": true
     },
     {
