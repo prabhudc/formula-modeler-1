@@ -306,7 +306,7 @@ if (hasAggregation) {
           node_is_root: false,
           node_is_leaf: true,
           node_is_constant: isNaN(node.value) ? false : true, 
-          node_is_variable: false,
+          node_is_variable: node.value.startsWith('{')  &&  node.value.endsWith('}') && node.value.length > 2 ,
           node_operator: '',
           node_operand: node.value,
           node_formula: '',
@@ -344,6 +344,8 @@ if (hasAggregation) {
             break; 
           }
         }
+
+        
 
         nodeArray.push({
           ID: node.ID,

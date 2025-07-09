@@ -93,6 +93,22 @@
                             </HBox>
                             <HBox id="keyFieldsButtonsContainer" wrap="Wrap"/>
                         </VBox>
+                        <VBox id="variablesSection" width="30%" class="sapUiSmallMarginBegin">
+                            <HBox>
+                                <core:Icon src="sap-icon://variables" decorative="false" tooltip="Variables"/>
+                                <Title text="Variables" level="H5" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                            <HBox id="variableSelectionContainer" wrap="Wrap">
+                                <Select id="availableVariablesSelect"
+                                        items="{/Variables}"
+                                        change="onVariableSelect">
+                                    <items>
+                                        <core:Item key="{variableName}" text="{variableName}"/>
+                                    </items>
+                                </Select>
+                                <Button text="Add Variable" press="onAddVariableToCodeEditor" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                        </VBox>
                     </HBox>
                     <!-- Two columns layout -->
                     <HBox width="100%">

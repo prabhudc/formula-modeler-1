@@ -2,9 +2,9 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-    <VBox id="targetModelsVBox">
+        <VBox id="targetModelsVBox">
             <Toolbar id="targetModelsToolbar" design="Auto">
-                <Title id="targetModelToolbarTitle" text="Target Models" level="H2"/>
+                <Title id="targetModelToolbarTitle" text="Maintain Target Models" level="H2"/>
                 <ToolbarSpacer id="targetModelToolbarSpacer"/>
                 <Button id="targetToolbarAdd" text="Add" icon="sap-icon://add" press="onAddNewTargetModel"/>
                 <Button id="targetToolbarDelete" text="Delete" icon="sap-icon://delete" press="onDeleteTargetModel" enabled="{= !!${targetModelsTable>/selectedContexts}.length }"/>
@@ -29,9 +29,65 @@
                 <items>
                     <ColumnListItem id="targetModelItemId">
                         <cells>
-                            <Input id ="targetModelColumnItemId" value="{targetModel}" editable="false"/>
-                            <Input id ="schemaColumnItemId" value="{schemaName}" editable="false"/>
-                            <Input id ="modelAliasColumnItemId" value="{modelAlias}" editable="true"/>
+                            <Input id="targetModelColumnItemId" value="{targetModel}" editable="false"/>
+                            <Input id="schemaColumnItemId" value="{schemaName}" editable="false"/>
+                            <Input id="modelAliasColumnItemId" value="{modelAlias}" editable="true"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+
+        <!-- New VBox for Variables -->
+        <VBox id="variablesVBox">
+            <Toolbar id="variablesToolbar" design="Auto">
+                <Title id="variablesToolbarTitle" text="Maintain Variables" level="H2"/>
+                <ToolbarSpacer id="variablesToolbarSpacer"/>
+                <Button id="variablesToolbarAdd" text="Add" icon="sap-icon://add" press="onAddVariable"/>
+                <Button id="variablesToolbarDelete" text="Delete" icon="sap-icon://delete" press="onDeleteVariable" enabled="{= !!${variablesTable>/selectedContexts}.length }"/>
+                <!-- <Button id="variablesToolbarSave" text="Save" icon="sap-icon://save" press="onSaveVariables"/> -->
+            </Toolbar>
+            <Table id="variablesTable"
+                   items="{/Variables}"
+                   mode="MultiSelect"
+                   selectionChange="onVariablesSelectionChange"
+                   backgroundDesign="Transparent">
+                <columns>
+                    <Column id="variableNameColumnId">
+                        <Text id="variableNameColumnTextId" text="Variable Name"/>
+                    </Column>
+                    <Column id="variableValueColumnId">
+                        <Text id="variableValueColumnTextId" text="Variable Value"/>
+                    </Column>
+                    <Column id="variableDescriptionColumnId">
+                        <Text id="variableDescriptionColumnTextId" text="Description"/>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem id="variableItemId">
+                        <cells>
+                            <!-- Variable Name Input -->
+                            <Input id="variableNameColumnItemId"
+                                   value="{variableName}"
+                                   editable="true"
+                                   placeholder="Enter Variable Name"
+                                   liveChange="onVariableNameLiveChange"/>
+
+                            <!-- Variable Value Input -->
+                            <Input id="variableValueColumnItemId"
+                                   value="{variableValue}"
+                                   editable="true"
+                                   type="Number"
+                                   placeholder="Enter Variable Value"
+                                   change="onFieldChange"/>
+
+                            <!-- Description Input -->
+                            <Input id="variableDescriptionColumnItemId"
+                                   value="{description}"
+                                   editable="true"
+                                   maxLength="255"
+                                   placeholder="Enter Description"
+                                   change="onFieldChange"/>
                         </cells>
                     </ColumnListItem>
                 </items>

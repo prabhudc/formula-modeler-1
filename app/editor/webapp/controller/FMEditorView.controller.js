@@ -485,6 +485,34 @@ sap.ui.define([
                 sCurrent += " ";
             }
             oCodeEditor.setValue(sCurrent + sOperator);
+        },
+        onVariableSelect: function (oEvent) {
+            var oSelect = oEvent.getSource();
+            var sSelectedKey = oSelect.getSelectedKey();
+
+            // Store the selected variable name for later use
+            this._selectedVariable = sSelectedKey;
+        },
+
+        onAddVariableToCodeEditor: function () {
+            var sVariableName = this._selectedVariable;
+
+            if (!sVariableName) {
+                sap.m.MessageToast.show("Please select a variable.");
+                return;
+            }
+
+            // Wrap the variable name in curly braces
+            var sWrappedVariable = `{${sVariableName}}`;
+
+            // Get the CodeEditor instance
+            var oCodeEditor = this.byId("formulaCodeEditor");
+
+            // Append the wrapped variable to the CodeEditor content
+            var sCurrentContent = oCodeEditor.getValue();
+            oCodeEditor.setValue(sCurrentContent + sWrappedVariable);
+
+            sap.m.MessageToast.show(`Variable "${sVariableName}" added to the formula.`);
         }
 
     });

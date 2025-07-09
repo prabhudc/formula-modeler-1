@@ -5,6 +5,7 @@ using CVD_HANA_MODELS as _newModels  from '../db/data-model.cds';
 using CVD_MODEL_FIELDS as _modelFields from '../db/data-model.cds';
 using Nodes as _nodes from '../db/data-model.cds';
 using Parameters as _parameters from '../db/data-model.cds';
+using Variables as _variables from '../db/data-model.cds';
 
 
 
@@ -24,6 +25,8 @@ service FormulaModelerServices {
     entity Nodes as projection on _nodes;
     // Parameters attached to each node
     entity Parameters as projection on _parameters;
+    // Variables that can be used in formulas
+    entity Variables as projection on _variables;
     
     action buildFormulaOnModelbyFormulaID(formulaID : UUID,
                                  params : {

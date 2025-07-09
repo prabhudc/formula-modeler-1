@@ -48,7 +48,13 @@ BEGIN
             if (:o_lnode.node_is_leaf == true and :o_lnode.node_is_constant != true ){
                   -- If the left node is a leaf and it is a column attribute 
                   -- enclose in double quotes
+               if (:o_lnode.node_is_variable == true){
+                  lnode_part = ' ( select top 1 variablevalue from variables where variablename = rtrim(ltrim('''||:lnode_part||''', ''{''), ''}'')) '; 
+               }else{
+                  -- If it is not a leaf, just enclose in double quotes
                   lnode_part = '"'||:lnode_part||'"';
+                  
+            }
             }
          } 
          -- Look at the right-branch
@@ -58,11 +64,14 @@ BEGIN
                rnode_part = :o_rnode.temp_formula_part;
                if (:o_rnode.node_is_leaf == true and :o_rnode.node_is_constant != true  ){
                   -- If the right node is a leaf and it is a column attribute 
-                  -- enclose in double quotes
-                  rnode_part = '"'||:rnode_part||'"';
-               }
+                  if (:o_rnode.node_is_variable == true){
+                    rnode_part = ' ( select top 1 variablevalue from variables where variablename = rtrim(ltrim('''||:rnode_part||''', ''{''), ''}'')) '; 
+                  }else{
+                     -- enclose in double quotes
+                     rnode_part = '"'||:rnode_part||'"';
+                  }
+                  }
          }
-
          
          -- if(:v.node_operator != '()' ){
             if ( count(:o_redge) != to_bigint(0) ) {

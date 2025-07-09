@@ -86,3 +86,10 @@ entity CVD_MODEL_FIELDS {
         ATTRIBUTE_TYPE: String(10);
         MODELALIAS : String(255);
 }
+
+entity Variables : cuid, managed {
+    variableName : String(255); // Name of the variable
+    variableValue : Decimal(17,5);// Value of the variable
+    description : String(255); // Optional description for the variable
+    isEnabled : Boolean default true; // Indicates if the variable is active
+}

@@ -10,6 +10,17 @@ GET http://localhost:4004/odata/v4/formula-modeler-services/Formulae?$expand=Mod
 # Create a TargetModels.view.xml with a table bound to /FormulaModels?$expand=model&$filter=parent_ID eq '{formulaId}' and display the columns targetModel, schemaName, modelAlias from the expanded model.
 GET http://localhost:4004/odata/v4/formula-modeler-services/FormulaModels?$expand=model&$filter=parent_ID eq 'b45c2d8e-1f3a-4b6c-8d9e-0f1a2b3c4d5e'
 
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Variables
+Content-Type: application/json
+
+{
+    "variableName": "TEST",
+    "variableValue": "1",
+    "description": "TEST_VAR"
+}
+###
+GET http://localhost:4004/odata/v4/formula-modeler-services/Variables
 
 
 ###
@@ -139,7 +150,7 @@ POST http://localhost:4004/odata/v4/formula-modeler-services/previewFormulaData
 Content-Type: application/json
 
 {
-    "formulaID": "7074f4f1-c0da-4c6a-8b94-0a71a369b64e"
+    "formulaID": "c2fc67e5-a1c9-4fc9-8393-59d2c12d6c5f"
 }
 ###
 
@@ -186,7 +197,7 @@ GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormu
 Content-Type: application/json
 
 {
-    "formulaID": "6bec1c24-bf39-40f0-a84a-ec6cecf34e43"
+    "formulaID": "c2fc67e5-a1c9-4fc9-8393-59d2c12d6c5f"
 }
 
 ###
@@ -226,9 +237,41 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('675c3eac-0276-44e1-a525-a47f2fc4a38b')
+DELETE http://localhost:4004/odata/v4/formula-modeler-services/Formulae('5de4592d-f814-4a2b-9baa-2e8f772fbac9')
 
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/Formulae
+Content-Type: application/json
 
+{
+      "title": "f_test_var_2",
+      "description": "Test Var 2",
+      "formula": "COST+\"{VAR1}\"",
+      "Models": [
+        {
+          "model_ID": "9f1d4c3e-7a2b-4d6e-8c1f-3b2a7d9e6f5c"
+        }
+      ],
+      "Nodes" : [
+        {
+          "node_formula" : "f_test_var_2",
+          "Parameters": [
+               {"parameter_value" : "ID"}
+              ]
+          }
+          
+      ]
+}
 
+###
+POST http://localhost:4004/odata/v4/formula-modeler-services/buildFormulaOnModelbyFormulaID
+Content-Type: application/json
 
+{
+    "formulaID": "c2fc67e5-a1c9-4fc9-8393-59d2c12d6c5f",
+    "params" : {
+        "keys": ["ID"],
+        "filters" : []
+    }
+}
 

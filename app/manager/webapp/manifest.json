@@ -76,8 +76,9 @@
           "bundleName": "fm.manager.i18n.i18n"
         }
       },
-      "FormulaModelerServices": {
+      "": {
         "dataSource": "FormulaModelerServices",
+        "type": "sap.ui.model.odata.v4.ODataModel",
         "preload": true,
         "settings": {
           "operationMode": "Server",
