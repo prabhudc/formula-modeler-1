@@ -38,48 +38,95 @@
                             <Text text="Model Alias" />
                         </Column>
                     </columns>
-                    <!-- No items binding here; handled in controller -->
                 </Table>
-                <!-- <Button text="Select Models"
-                                type="Emphasized"
-                                press="onSelectModels"
-                                enabled="{= !!${targetModelsTable>/selectedContexts}.length }"/> -->
             </VBox>
             <HBox width="100%" class="sapUiResponsiveContentPadding sapUiLargeMarginTop">
-                        <!-- Formula Name and Description -->
-                        <VBox id="formulaHeaderFieldsMaintenance" width="35%">
-                            <Input
-                                id="formulaNameInputMaintenance"
-                                value="{title}"
-                                placeholder="Enter Formula Name"
-                                required="true"
-                                valueLiveUpdate="true"
-                                liveChange="onFormulaNameChange"
-                                maxLength="255"
-                                showValueHelp="false"
-                                description=""
-                                tooltip="Max 255 chars, no spaces, only letters, numbers, and underscores"
-                                width="100%"/>
-                            <TextArea
-                                id="formulaDescriptionInputMaintenance"
-                                value="{description}"
-                                placeholder="Enter Formula Description"
-                                required="true"
-                                valueLiveUpdate="true"
-                                liveChange="onFormulaDescriptionChange"
-                                rows="3"
-                                growing="true"
-                                width="100%"/>
-                        </VBox>
-                        <!-- Key Fields Section moved here -->
-                        <VBox id="keyFieldsSectionMaintenance" width="30%" class="sapUiSmallMarginBegin">
-                            <HBox>
-                                <core:Icon src="sap-icon://key" decorative="false" tooltip="Key Fields"/>
-                                <Title text="Key Fields" level="H5" class="sapUiTinyMarginBegin"/>
-                            </HBox>
-                            <HBox id="keyFieldsButtonsContainerMaintenanceView" wrap="Wrap"/>
-                        </VBox>
+                <!-- Formula Name and Description -->
+                <VBox id="formulaHeaderFieldsMaintenance" width="35%">
+                    <Input
+                        id="formulaNameInputMaintenance"
+                        value="{title}"
+                        editable="false"
+                        placeholder="Enter Formula Name"
+                        required="true"
+                        valueLiveUpdate="true"
+                        maxLength="255"
+                        showValueHelp="false"
+                        description=""
+                        tooltip="Max 255 chars, no spaces, only letters, numbers, and underscores"
+                        width="100%"/>
+                    <TextArea
+                        id="formulaDescriptionInputMaintenance"
+                        value="{description}"
+                        editable="false"
+                        placeholder="Enter Formula Description"
+                        required="true"
+                        rows="3"
+                        growing="true"
+                        width="100%"/>
+                </VBox>
+                <!-- Key Fields Section -->
+                <VBox id="keyFieldsSectionMaintenance" width="30%" class="sapUiSmallMarginBegin">
+                    <HBox>
+                        <core:Icon src="sap-icon://key" decorative="false" tooltip="Key Fields"/>
+                        <Title text="Key Fields" level="H5" class="sapUiTinyMarginBegin"/>
                     </HBox>
+                    <HBox id="keyFieldsButtonsContainerMaintenanceView" wrap="Wrap"/>
+                </VBox>
+            </HBox>
+
+            <HBox width="100%">
+                <!-- First column: 35% width -->
+                <VBox width="35%">
+                    <!-- Formula Fields Section -->
+                    <VBox>
+                        <HBox class="sapUiSmallMarginBottom sapUiTinyMarginTop">
+                            <core:Icon src="sap-icon://measure" decorative="false" tooltip="Formula Fields"/>
+                            <Title text="Formula Fields" level="H5" class="sapUiTinyMarginBegin"/>
+                        </HBox>
+                        <HBox id="formulaFieldsButtonsContainerMaintenanceView" wrap="Wrap" class="sapUiSmallMarginBottom"/>
+                    </VBox>
+                    <!-- Operator Buttons Section -->
+                    <HBox class="sapUiSmallMarginBottom sapUiTinyMarginTop">
+                        <core:Icon src="sap-icon://overflow" decorative="false" tooltip="Operators"/>
+                        <Title text="Operators" level="H5" class="sapUiTinyMarginBegin"/>
+                    </HBox>
+                    <HBox id="operatorButtonsContainerMaintenanceView" class="sapUiSmallMarginBottom" wrap="Wrap">
+                        <Button text="+" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="-" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="*" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="/" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="(" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text=")" enabled="false" class="sapUiTinyMargin"/>
+                    </HBox>
+                    <HBox id="functionsButtonsContainerMaintenanceView" class="sapUiSmallMarginBottom" wrap="Wrap">
+                        <Button text="sum" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="min" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="max" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="avg" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="windowSum" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="windowMin" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="windowMax" enabled="false" class="sapUiTinyMargin"/>
+                        <Button text="windowAvg" enabled="false" class="sapUiTinyMargin"/>
+                    </HBox>
+                </VBox>
+                <!-- Second column: 65% width -->
+                <VBox width="65%">
+                    <Toolbar>
+                        <core:Icon src="sap-icon://simulate" decorative="false" tooltip="Formula Editor" class="sapUiTinyMarginEnd"/>
+                        <Title text="Formula Editor"/>
+                        <ToolbarSpacer/>
+                    </Toolbar>
+                    <ce:CodeEditor
+                        id="formulaCodeEditorMaintenanceView"
+                        type="text"
+                        editable="false"
+                        height="200px"
+                        width="100%"
+                        colorTheme="gruvbox"
+                        syntaxHints="true"/>
+                </VBox>
+            </HBox>
         </Panel>
     </VBox>
 </mvc:View>

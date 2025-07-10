@@ -40,7 +40,7 @@
                         </HBox>
                         <Table
                             id="formulaeTable"
-                            items="{/Formulae}"
+                                items="{/Formulae}"
                             width="100%"
                             mode="None"
                             class="sapUiResponsiveMargin"

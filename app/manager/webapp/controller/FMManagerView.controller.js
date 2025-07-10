@@ -1,7 +1,8 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/ui/core/Fragment"
-], (Controller, Fragment) => {
+    "sap/ui/core/Fragment",
+    "sap/m/MessageBox"
+], (Controller, Fragment, MessageBox) => {
     "use strict";
 
     return Controller.extend("fm.manager.controller.FMManagerView", {
@@ -138,11 +139,100 @@ sap.ui.define([
                 sap.m.MessageToast.show("Error deleting Target Model.");
             });
         },
+        onDeleteVariable: function () {
+            var oVariablesTable = this.byId("variablesTable");
+            var aSelectedItems = oVariablesTable.getSelectedItems();
+
+            // Check if any items are selected
+            if (aSelectedItems.length === 0) {
+                sap.m.MessageToast.show("Please select one or more variables to delete.");
+                return;
+            }
+
+            var oModel = this.getView().getModel();
+
+            // Iterate through selected items and delete them
+            aSelectedItems.forEach(function (oItem) {
+                var oContext = oItem.getBindingContext();
+                var sPath = oContext.getPath();
+
+                // Use the promise returned by the delete method
+                oModel.delete(sPath).then(function () {
+                    sap.m.MessageToast.show("Variable deleted successfully.");
+                    oVariablesTable.getBinding("items").refresh();
+                }).catch(function (oError) {
+                    sap.m.MessageToast.show("Error deleting variable.");
+                    console.error("Error deleting variable:", oError);
+                });
+            });
+        },
         onDataSourceCancel: function () {
             // Optional: handle cancel if needed
         },
         
         onInit() {
+            // Initialize the variables model
+        },
+        onAddVariable: function () {
+            var oModel = this.getView().getModel();
+            var oBinding = oModel.bindList("/Variables");
+
+            // Create a new empty entry in the backend
+            var oContext = oBinding.create({
+                variableName: "",
+                variableValue: null,
+                description: "",
+                isEnabled: true
+            });
+
+            // Handle success and error scenarios
+            oContext.created().then(function () {
+                sap.m.MessageToast.show("New variable added successfully.");
+
+                // Refresh the table binding to show the new entry
+                var oVariablesTable = this.byId("variablesTable");
+                oVariablesTable.getBinding("items").refresh();
+            }.bind(this)).catch(function (oError) {
+                sap.m.MessageToast.show("Error adding new variable.");
+                console.error("Error adding new variable:", oError);
+            });
+        },
+
+        onFieldChange: function (oEvent) {
+            var oInput = oEvent.getSource();
+            var oContext = oInput.getBindingContext();
+            var sPath = oContext.getPath();
+            var oModel = this.getView().getModel();
+
+            // Update the backend with the changed value
+            var sProperty = oInput.getBinding("value").getPath();
+            var sValue = oInput.getValue();
+
+            var oUpdateData = {};
+            oUpdateData[sProperty] = sValue;
+
+            oModel.update(sPath, oUpdateData).then(function () {
+                sap.m.MessageToast.show("Field updated successfully.");
+            }).catch(function (oError) {
+                sap.m.MessageToast.show("Error updating field.");
+                console.error("Error updating field:", oError);
+            });
+        },
+        onVariableNameLiveChange: function (oEvent) {
+            var oInput = oEvent.getSource();
+            var sValue = oEvent.getParameter("value");
+
+            // Regular expression to validate variable name syntax
+            var bValid = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(sValue);
+
+            if (!bValid) {
+                // Set input to error state if validation fails
+                oInput.setValueState("Error");
+                oInput.setValueStateText("Variable name must start with a letter or underscore and can only contain letters, numbers, and underscores.");
+            } else {
+                // Reset input state if validation passes
+                oInput.setValueState("None");
+            }
         }
     });
 });

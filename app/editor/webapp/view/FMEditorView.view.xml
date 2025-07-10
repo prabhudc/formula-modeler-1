@@ -27,7 +27,7 @@
                         <Text text="Select one or more models from the list below:"/>
                         <Table id="targetModelsTable"
                                items="{/TargetModels}"
-                               mode="MultiSelect"
+                               mode="SingleSelectLeft"
                                selectionChange="onTargetModelsSelectionChange">
                             <columns>
                                 <Column>
@@ -93,6 +93,22 @@
                             </HBox>
                             <HBox id="keyFieldsButtonsContainer" wrap="Wrap"/>
                         </VBox>
+                        <VBox id="variablesSection" width="30%" class="sapUiSmallMarginBegin">
+                            <HBox>
+                                <core:Icon src="sap-icon://variables" decorative="false" tooltip="Variables"/>
+                                <Title text="Variables" level="H5" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                            <HBox id="variableSelectionContainer" wrap="Wrap">
+                                <Select id="availableVariablesSelect"
+                                        items="{/Variables}"
+                                        change="onVariableSelect">
+                                    <items>
+                                        <core:Item key="{variableName}" text="{variableName}"/>
+                                    </items>
+                                </Select>
+                                <Button text="Add Variable" press="onAddVariableToCodeEditor" class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                        </VBox>
                     </HBox>
                     <!-- Two columns layout -->
                     <HBox width="100%">
@@ -120,11 +136,15 @@
                                 <Button text=")" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
                             </HBox>
                             <HBox id="functionsButtonsContainer" class="sapUiSmallMarginBottom" wrap="Wrap">
-                                <Button text="avg" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="sum" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
                                 <Button text="min" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
                                 <Button text="max" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
-                                <Button text="sum" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
-                                <Button text="count" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="avg" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+
+                                <Button text="windowSum" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="windowMin" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="windowMax" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
+                                <Button text="windowAvg" press="onOperatorButtonPress" class="sapUiTinyMargin"/>
                             </HBox>
                         </VBox>
                         <!-- Second column: 65% width, code editor -->

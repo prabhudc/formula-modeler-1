@@ -29,7 +29,7 @@ mta_archives/
 # IDEs
 # .vscode
 # .idea
-
+sql/
 # @cap-js/cds-typer
 @cds-models
 .$*.drawio.*

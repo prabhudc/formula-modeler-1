@@ -1,7 +1,7 @@
 {
   "name": "formula-modeler-1",
   "version": "1.0.0",
-  "description": "A simple CAP project.",
+  "description": "Formula Modeler.",
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
@@ -23,6 +23,7 @@
   "scripts": {
     "start": "cds-serve",
     "watch-manager": "cds watch --open manager/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-editor": "cds watch --open editor/webapp/index.html?sap-ui-xx-viewCache=false",
     "undeploy": "cf undeploy formula-modeler-1 --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1"

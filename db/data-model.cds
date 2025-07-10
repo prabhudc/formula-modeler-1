@@ -19,7 +19,7 @@ entity Nodes  : cuid {
     node_is_leaf : Boolean default false;
     node_is_constant : Boolean default false;
     node_is_variable : Boolean default false;
-    node_operator : String(5) default '';
+    node_operator : String(10) default '';
     node_operand : String(255) default '';
     node_formula : String(255) default '';
     Parameters : Composition of many Parameters on Parameters.node = $self;
@@ -41,7 +41,7 @@ entity FormulaModels  {
 
 // Parameters applicable to a node
 entity Parameters : cuid {
-    key node : Association to Nodes;
+    node : Association to Nodes;
     parameter_name : String(255);
     parameter_value : String(255);
     parameter_type : String(255); 
@@ -85,4 +85,11 @@ entity CVD_MODEL_FIELDS {
         TARGETMODEL : String(255);
         ATTRIBUTE_TYPE: String(10);
         MODELALIAS : String(255);
+}
+
+entity Variables : cuid, managed {
+    variableName : String(255); // Name of the variable
+    variableValue : Decimal(17,5);// Value of the variable
+    description : String(255); // Optional description for the variable
+    isEnabled : Boolean default true; // Indicates if the variable is active
 }

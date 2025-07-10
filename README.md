@@ -1,29 +1,3 @@
-# Getting Started
-
-Welcome to your new project.
-
-It contains these folders and files, following our recommended project layout:
-
-File or Folder | Purpose
----------|----------
-`app/` | content for UI frontends goes here
-`db/` | your domain models and data go here
-`srv/` | your service models and code go here
-`package.json` | project metadata and configuration
-`readme.md` | this getting started guide
-
-
-## Next Steps
-
-- Open a new terminal and run `cds watch`
-- (in VS Code simply choose _**Terminal** > Run Task > cds watch_)
-- Start adding content, for example, a [db/schema.cds](db/schema.cds).
-
-
-## Learn More
-
-Learn more at https://cap.cloud.sap/docs/get-started/.
-
 # Formula Modeler
 
 ## Overview
@@ -58,40 +32,38 @@ The Formula Modeler solution consists of three main layers:
 - **Node.js Application (Cloud Foundry Runtime):** Hosts the business logic and service APIs.
 - **SAPUI5 User Interface:** Provides a modern, user-friendly interface for managing formulas.
 
-### Architecture Block Diagram
+### Architecture Integration Patterns
 
-```mermaid
-flowchart TD
-    %% Top row: Formula Modeler and Business Applications
-    subgraph FM["Formula Modeler"]
-        C1[SAPUI5 UI]
-        C2[Node.js Service Layer]
-        C1 --> C2
-    end
+![alt text](<Architecture  diagram.jpg>)
+The formula modeler supports two usage  possibilities
+1) Standalone applications sharing the same subaccount, but separate hdi containers
+2) Separate subaccounts with different containers sharing the hana database.
 
-    subgraph BA["Business Applications"]
-        A1[Sales App]
-        A2[Finance App]
-        A3[Pricing App]
-    end
+Application can integrate with the formula modeler via. a sequence of api or database level access.
 
-    %% Wide HANA Cloud layer
-    subgraph HC["HANA Cloud (Curated Models & FM DB Objects)"]
-        B4[FM DB objects]
-        B1[Sales HANA Models]
-        B2[Finance HANA Models]
-        B3[Pricing HANA Models]
-    end
+The business flow of events are as following.
 
-    %% Connections
-    C2 --> B4
-    A1 --> B1
-    A2 --> B2
-    A3 --> B3
-    B1 -- consume via DB --> B4
-    B2 -- consume via DB --> B4
-    B3 -- consume via DB --> B4
-    A1 -- consume via API (FM ID) --> C2
-    A2 -- consume via API (FM ID) --> C2
-    A3 -- consume via API (FM ID) --> C2
-```
+### Use cases
+* End users are given the flexibility to create formula with lesser dependency on IT. Scenarios which involve in adjusting formulas on a regular basis could take advantage of the formula modeler.
+* A tool that can push down the calculation to the datbase. Results are to be batched and returned.
+
+
+
+1. It teams maintain application level calculation. A hdb role is maintained in the application to expose these calculation views alone with SELECT privilege
+2. A business user go into formula modeler manager's user interface and adds potential calculation views that are used in the application domain
+3. A business user then creates several formulas on the calculation views selected in the previous step. These formulas are now availabled to the consuming application.
+4. The consuming application can invoke the formula by means of two approaches.
+4.1 Invoking an api in the formula modeler application by passing the formula id as a parameter
+4.2 Directly querying a database function within the formula modeler.
+5. The consuming application can then decide to render the outcome or apply it to a further calculation.
+
+
+
+API Ingress
+
+
+
+API egress
+
+API invocation sequence
+
