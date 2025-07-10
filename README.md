@@ -60,6 +60,13 @@ flowchart TD
 
 ---
 
+### Benefits
+
+- **Centralized Formula Management:** All formulas are maintained in one place, reducing duplication and ensuring consistency.  
+- **High-Performance Calculations:** In-memory execution within the HANA database ensures optimal performance.  
+- **Flexible Integration:** Formulas can be consumed via APIs or direct database queries, making integration seamless for various applications.
+---
+
 ### Example Use Case
 
 Imagine a scenario where a pricing application needs to calculate discounts dynamically based on product categories and sales volumes. The Formula Modeler allows IT teams to expose curated pricing models, and business users can define formulas like:  
@@ -86,15 +93,6 @@ The formula modeler supports two usage  possibilities
 2) Separate subaccounts with different containers sharing the hana database.
 
 
----
-
-
-
-### Benefits
-
-- **Centralized Formula Management:** All formulas are maintained in one place, reducing duplication and ensuring consistency.  
-- **High-Performance Calculations:** In-memory execution within the HANA database ensures optimal performance.  
-- **Flexible Integration:** Formulas can be consumed via APIs or direct database queries, making integration seamless for various applications.
 
 ---
 
