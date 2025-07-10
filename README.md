@@ -1,4 +1,5 @@
 # Formula Modeler
+https://tinyurl.com/formulamodeler
 
 ## Overview
 
@@ -36,7 +37,7 @@ flowchart TD
     D --> D2[Direct Database Query]
     D1 --> E[Render or Apply Formula Results]
     D2 --> E[Business user previews and validates the data ]
-    E --> D3[Business user previews and validates the data ]
+    E --> D3[Business user applies the formula ]
 ```
 
 1. **IT Teams Maintain Application-Level Calculation View Models**  
