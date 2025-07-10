@@ -1,0 +1,8 @@
+
+
+GET http://localhost:4004/odata/v4/formula-modeler-services/retrieveDataForFormulaID?$top=100&$skip=200
+Content-Type: application/json
+
+{
+    "formulaID": "c2fc67e5-a1c9-4fc9-8393-59d2c12d6c5f"
+}
