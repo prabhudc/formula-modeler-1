@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Formula Modeler** is a full-stack application designed for to be used by end users to create and manage formulas on IT curated data models(HANA). The tool enables centralized formula management and high-performance, in-memory calculations, making it easy for various business applications to consume and leverage these formulas without duplicating data.
+**Formula Modeler** is a full-stack application designed to be used by end users to create and manage formulas on IT curated data models(HANA). The tool enables centralized formula management and high-performance, in-memory calculations, making it easy for various business applications to consume and leverage these formulas without duplicating data.
 
 ---
 
@@ -21,35 +21,6 @@
 - Formula Modeler operates independently, allowing users to define and maintain formulas centrally on top of the application hana models.
 - These formulas are then available for consumption by any business application, either through their application/service layer or directly via the database.
 - The only requirement for integration is that each business application must grant the necessary privileges (via an `hdbrole`) to expose its HANA models and data to Formula Modeler.
-
----
-
-## Architecture
-
-The Formula Modeler solution consists of three main layers:
-
-- **SAP HANA Database Container:** Stores curated data models and executes in-memory formula calculations.
-- **Node.js Application (Cloud Foundry Runtime):** Hosts the business logic and service APIs.
-- **SAPUI5 User Interface:** Provides a modern, user-friendly interface for managing formulas.
-
-### Architecture Integration Patterns
-
-
-
-The formula modeler supports two usage  possibilities
-1) Standalone applications sharing the same subaccount, but separate hdi containers
-2) Separate subaccounts with different containers sharing the hana database.
-
-Application can integrate with the formula modeler via. a sequence of api or database level access.
-
-The business flow of events are as following.
-
-### General Use cases
-* End users are given the flexibility to create formula with lesser dependency on IT. Scenarios which involve in adjusting formulas on a regular basis could take advantage of the formula modeler.
-* A tool that can push down the calculation to the datbase. Results are to be batched and returned.
-
-
-
 
 ---
 
@@ -97,6 +68,27 @@ Imagine a scenario where a pricing application needs to calculate discounts dyna
 The pricing application can then invoke these formulas via API or database queries, ensuring consistent and high-performance calculations at runtime.
 
 ---
+
+## Architecture
+
+The Formula Modeler solution consists of three main layers:
+
+- **SAP HANA Database Container:** Stores curated data models and executes in-memory formula calculations.
+- **Node.js Application (Cloud Foundry Runtime):** Hosts the business logic and service APIs.
+- **SAPUI5 User Interface:** Provides a modern, user-friendly interface for managing formulas.
+
+### Architecture Integration Patterns
+
+![Architecture Diagram](./architecture-diagram.jpg)
+
+The formula modeler supports two usage  possibilities
+1) Standalone applications sharing the same subaccount, but separate hdi containers
+2) Separate subaccounts with different containers sharing the hana database.
+
+
+---
+
+
 
 ### Benefits
 
