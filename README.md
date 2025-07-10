@@ -54,6 +54,19 @@ The business flow of events are as following.
 ---
 
 ### Step-by-Step Workflow
+Below is a diagrammatic representation of the workflow:
+
+```mermaid
+flowchart TD
+    A[IT Teams Maintain Application-Level Calculations] --> B[Business User Adds Calculation Views]
+    B --> C[Business User Creates Formulas]
+    C --> D[A  business user selects the desired formula in the consuming application invoking the formula]
+    D --> D1[API Invocation]
+    D --> D2[Direct Database Query]
+    D1 --> E[Render or Apply Formula Results]
+    D2 --> E[Business user previews and validates the data ]
+    E --> D3[Business user previews and validates the data ]
+```
 
 1. **IT Teams Maintain Application-Level Calculations**  
    IT teams define and maintain calculation views in their respective applications. A dedicated `hdbrole` is created  to expose these calculation views with `SELECT` privileges in the consuming application, ensuring secure access for the Formula Modeler application. 
@@ -295,20 +308,7 @@ This API is used to maintain variables in the Formula Modeler. These variables a
 
 ---
 
-### Step-by-Step Workflow (Diagram)
 
-Below is a diagrammatic representation of the workflow:
 
-```mermaid
-flowchart TD
-    A[IT Teams Maintain Application-Level Calculations] --> B[Business User Adds Calculation Views]
-    B --> C[Business User Creates Formulas]
-    C --> D[A  business user selects the desired formula in the consuming application invoking the formula]
-    D --> D1[API Invocation]
-    D --> D2[Direct Database Query]
-    D1 --> E[Render or Apply Formula Results]
-    D2 --> E[Business user previews and validates the data ]
-    E --> D3[Business user previews and validates the data ]
-```
 
 
