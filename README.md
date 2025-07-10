@@ -29,7 +29,7 @@ Below is a diagrammatic representation of the workflow:
 
 ```mermaid
 flowchart TD
-    A[IT Teams Maintain Application-Level Calculations] --> B[Business User Adds Calculation Views]
+    A[IT Teams Maintain Application-Level Calculation View Models] --> B[Business User Add the models into the scope of the Formula Modeler]
     B --> C[Business User Creates Formulas]
     C --> D[A  business user selects the desired formula in the consuming application invoking the formula]
     D --> D1[API Invocation]
@@ -39,10 +39,10 @@ flowchart TD
     E --> D3[Business user previews and validates the data ]
 ```
 
-1. **IT Teams Maintain Application-Level Calculations**  
+1. **IT Teams Maintain Application-Level Calculation View Models**  
    IT teams define and maintain calculation views in their respective applications. A dedicated `hdbrole` is created  to expose these calculation views with `SELECT` privileges in the consuming application, ensuring secure access for the Formula Modeler application. 
 
-2. **Business User Adds Calculation Views**  
+2. **Business User Add Models into Formula Modeler**  
    The business user accesses the Formula Modeler Manager's user interface and selects the calculation views exposed by IT teams. These views are added to the Formula Modeler application for further formula configuration. These models now become the scope of formulas to work with.
 
 3. **Business User Creates Formulas**  

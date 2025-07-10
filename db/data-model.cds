@@ -47,6 +47,13 @@ entity Parameters : cuid {
     parameter_type : String(255); 
     is_parameter_enabled : Boolean default true;
 }
+// Variables that can be used in formulae
+entity Variables : cuid, managed {
+    variableName : String(255); // Name of the variable
+    variableValue : Decimal(17,5);// Value of the variable
+    description : String(255); // Optional description for the variable
+    isEnabled : Boolean default true; // Indicates if the variable is active
+}
 
 @assert.unique: {unique_model_alias: [modelAlias]} 
 entity TargetModels: cuid, managed {
@@ -85,11 +92,4 @@ entity CVD_MODEL_FIELDS {
         TARGETMODEL : String(255);
         ATTRIBUTE_TYPE: String(10);
         MODELALIAS : String(255);
-}
-
-entity Variables : cuid, managed {
-    variableName : String(255); // Name of the variable
-    variableValue : Decimal(17,5);// Value of the variable
-    description : String(255); // Optional description for the variable
-    isEnabled : Boolean default true; // Indicates if the variable is active
 }
